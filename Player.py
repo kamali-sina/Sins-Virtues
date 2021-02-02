@@ -1,10 +1,8 @@
 
-
+STARTING_MAX_HEALTH = 10
+STARTING_GOLD = 0
+STARTING_LOCATION = [0,0]
 class Player:
-    STARTING_MAX_HEALTH = 50
-    STARTING_GOLD = 0
-    STARTING_LOCATION = [0,0]
-
     def __init__(self, path_to_save=None):
         self.inventory = []
         self.health = STARTING_MAX_HEALTH
