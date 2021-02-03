@@ -8,21 +8,39 @@ class Item:
         self.name = "ite"
         self.tags = []
 
-class Shovel(Item):
+class UtilityItem(Item):
+    def __init__(self):
+        self.name = 'utility'
+        self.tags = ['utility']
+
+class HpItem(Item):
+    def __init__(self):
+        self.tags = ["hp"]
+        self.hp = 0
+
+class AttackItem(Item):
+    def __init__(self):
+        self.tags = ['attack']
+        self.name = "sword"
+        self.damage = 0
+        #TODO: think about this
+        self.agile_mult = 1
+
+class Shovel(UtilityItem):
     def __init__(self):
         self.INITIAL_USES = 3
         self.tags = ["utility"]
         self.name = "shovel"
         self.uses = self.INITIAL_USES
 
-class Compass(Item):
+class Compass(UtilityItem):
     def __init__(self):
         self.INITIAL_USES = 9999 #inf
         self.tags = ["utility"]
         self.name = "compass"
         self.uses = self.INITIAL_USES
 
-class Knife(Item):
+class Knife(AttackItem):
     def __init__(self):
         self.INITIAL_USES = 6
         self.tags = ["utility", 'attack']
@@ -32,7 +50,7 @@ class Knife(Item):
         #TODO: think about this
         self.agile_mult = 1.5
 
-class Sword(Item):
+class Sword(AttackItem):
     def __init__(self):
         self.tags = ['attack']
         self.name = "sword"
@@ -40,12 +58,12 @@ class Sword(Item):
         #TODO: think about this
         self.agile_mult = 1
 
-class Apple(Item):
+class Apple(HpItem):
     def __init__(self):
         self.tags = ["hp"]
         self.hp = 3
 
-class Meat(Item):
+class Meat(HpItem):
     def __init__(self):
         self.tags = ['attack', 'hp']
         self.damage = 1
