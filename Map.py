@@ -35,7 +35,7 @@ class Map:
             raw_index = int(MAP_SIZE * MAP_SIZE * random())
             index = (raw_index//MAP_SIZE, raw_index%MAP_SIZE)
             val = (MAP_SIZE - 1)//2
-            cords = (-(val - index[0]),index[1] - val)
+            cords = (val - index[0],index[1] - val)
             if (self.map[index[0]][index[1]] != None):
                 continue
             if (abs(cords[0]) < tup[2][0] and abs(cords[1]) < tup[2][1]):
@@ -69,3 +69,10 @@ class Map:
             for j in range(13):
                 print(self.map[i][j], end = "  ")
             print()
+    
+    def is_location_valid(self, tup):
+        val = (MAP_SIZE - 1)//2
+        indexes = (val - tup[0],tup[1] + val)
+        if (indexes[0] < MAP_SIZE and indexes[1] < MAP_SIZE and indexes[0] >= 0 and indexes[1] >= 0):
+            return True
+        return False
