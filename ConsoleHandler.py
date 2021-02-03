@@ -5,6 +5,8 @@ from time import sleep
 HELPS = ['-h', '--help']
 NEWGAME = '-n'
 LOADGAME = '-s'
+#TODO: make toturial
+TOTURIALS = ['-t', '--toturial']
 
 def error(string):
     cprint(f'ERROR: {string}','red')
@@ -41,3 +43,6 @@ def intro_cutscene():
     cprint('\n> A white light fills the room\n','magenta')
     sleep(0.5)
     dialog('You', "Where the hell am I? It's getting dark, better find shelter.", 'yellow', speed=7)
+
+def out_of_bounds_dialog():
+    dialog('You', "Ohoh!!! there is a cliff here! I can't move this direction.", 'yellow', speed=20)
