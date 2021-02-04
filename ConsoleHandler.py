@@ -46,3 +46,9 @@ def intro_cutscene():
 
 def out_of_bounds_dialog():
     dialog('You', "Ohoh!!! there is a cliff here! I can't move this direction.", 'yellow', speed=20)
+
+def dont_have_items_dialog():
+    dialog('You', "I do not have that item!", 'yellow', speed=18)
+
+def cant_use_item_dialog():
+    dialog('You', "I can't use that item!", 'yellow', speed=17)
