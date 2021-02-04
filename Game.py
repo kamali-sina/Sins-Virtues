@@ -51,7 +51,7 @@ class Game:
     
     def unknown_command_dialog(self):
         self.idiot_counter += 1
-        if (self.idiot_counter > 3):
+        if (self.idiot_counter > 2):
             dialog('You', "I am bec oming bo bo idiot m an! maybe I should study the to turial?", 'yellow', speed=12)
             return
         dialog('You', "I do not know how to do that!", 'yellow', speed=15)
@@ -61,8 +61,8 @@ class Game:
         moveset = ['north', 'south', 'east', 'west', 'up', 'down', 'left', 'right']
         moveset_handler = [(1,0), (-1,0), (0,1), (-1,0), (1,0), (-1,0), (0,1), (-1,0)]
         if (len(dupped_str) < 2):
-            print(2)
             self.unknown_command_dialog()
+            return
         try:
             index = moveset.index(dupped_str[1])
             tup = (self.player.location[0] + moveset_handler[index][0] , self.player.location[1] + moveset_handler[index][1])
@@ -71,22 +71,40 @@ class Game:
                 return
             self.player.move(moveset_handler[index])
         except:
-            print(1)
             print(dupped_str[1])
             self.unknown_command_dialog()
         return
     
     def inventory(self, dupped_str):
-        #TODO:complete
-        print('base')
+        if (len(dupped_str) != 1):
+            self.unknown_command_dialog()
+            return
+        self.player.print_inventory()
     
     def use(self, dupped_str):
-        #TODO:complete
-        print('base')
+        utility_items = ['shovel', 'compass']
+        utility_handlers = [self.dig_here, self.use_compass]
+        if (len(dupped_str) < 2):
+            self.unknown_command_dialog()
+            return
+        index = self.player.index_item(dupped_str[1])
+        if (index == -1):
+            ConsoleHandler.dont_have_items_dialog()
+            return
+        if('utility' in self.player.inventory[index].tags):
+            #TODO: complete this shit
+            self.player.use_utility(index)
+        elif ('hp' in self.player.inventory[index].tags):
+            self.player.heal(index)
+        else:
+            ConsoleHandler.cant_use_item_dialog()
+            return
     
     def info(self, dupped_str):
-        #TODO:complete
-        print(f'cords: {self.player.location[0]}, {self.player.location[1]}')
+        if (len(dupped_str) != 1):
+            self.unknown_command_dialog()
+            return
+        self.player.print_info()
     
     def attack(self, dupped_str):
         #TODO:complete
@@ -99,3 +117,9 @@ class Game:
     def counter(self, dupped_str):
         #TODO:complete
         print('base')
+    
+    def use_compass(self, index):
+        print('fuck')
+
+    def dig_here(self, index):
+        print('fuck')
