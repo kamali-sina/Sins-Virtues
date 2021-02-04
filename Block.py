@@ -20,7 +20,7 @@ class CastleBlock(Block):
 class DigableBlock(Block):
     def __init__(self):
         self.ITEM_CHANCE = 0.4
-        self.tags = ['random', 'special']
+        self.tags = ['random', 'special', 'loot']
         self.name = "digable"
         self.rarity = 10
         self.contains_item = random() < self.ITEM_CHANCE
@@ -29,9 +29,13 @@ class DigableBlock(Block):
 
 class NormalBlock(Block):
     def __init__(self):
-        self.tags = ['random']
+        self.ITEM_CHANCE = 0.04
+        self.tags = ['random', 'loot']
         self.rarity = 1
         self.name = "normal"
+        self.contains_item = random() < self.ITEM_CHANCE
+        if (self.contains_item):
+            self.item_inside = Item.get_random_item(luck_factor=0)
 
 class HomeBlock(Block):
     def __init__(self):
