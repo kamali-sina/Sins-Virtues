@@ -76,3 +76,7 @@ class Map:
         if (indexes[0] < MAP_SIZE and indexes[1] < MAP_SIZE and indexes[0] >= 0 and indexes[1] >= 0):
             return True
         return False
+
+    def compass(self):
+        #TODO: complete this
+        print('compass')
