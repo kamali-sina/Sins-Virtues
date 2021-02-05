@@ -1,15 +1,17 @@
-from ConsoleHandler import slow, intro_cutscene, dialog
+from ConsoleHandler import slow, intro_cutscene, dialog, error
 import ConsoleHandler
+from Block import DigableBlock
+from termcolor import colored
 from Player import Player
 from Map import Map
 
 
 class Game:
     def __init__(self,path_to_savefiles=None, newgame=True):
-        self.NORMAL_COMMANDS = ['move', 'inventory', 'use', 'info']
-        self.NORMAL_COMMANDS_HANDLER = [self.move, self.inventory, self.use, self.info]
-        self.FIGHT_COMMANDS = ['inventory', 'info', 'use', 'attack', 'counter', 'sneak']
-        self.FIGHT_COMMANDS_HANDLER = [self.inventory, self.info, self.use, self.attack, self.counter, self.sneak]
+        self.NORMAL_COMMANDS = ['move', 'inventory', 'use', 'info', 'commands', 'map']
+        self.NORMAL_COMMANDS_HANDLER = [self.move, self.inventory, self.use, self.info, self.commands, self.map]
+        self.FIGHT_COMMANDS = ['inventory', 'info', 'use', 'attack', 'counter', 'sneak', 'commands']
+        self.FIGHT_COMMANDS_HANDLER = [self.inventory, self.info, self.use, self.attack, self.counter, self.sneak, self.commands]
         # intro_cutscene()
         self.player = Player(path_to_savefiles)
         self.map = Map(path_to_savefiles)
@@ -59,7 +61,7 @@ class Game:
     
     def move(self, dupped_str):
         moveset = ['north', 'south', 'east', 'west', 'up', 'down', 'left', 'right']
-        moveset_handler = [(1,0), (-1,0), (0,1), (-1,0), (1,0), (-1,0), (0,1), (-1,0)]
+        moveset_handler = [(1,0), (-1,0), (0,1), (0,-1), (1,0), (-1,0), (0,-1), (0,1)]
         if (len(dupped_str) < 2):
             self.unknown_command_dialog()
             return
@@ -92,8 +94,12 @@ class Game:
             ConsoleHandler.dont_have_items_dialog()
             return
         if('utility' in self.player.inventory[index].tags):
-            #TODO: complete this shit
-            self.player.use_utility(index)
+            try:
+                handler_index = utility_items.index(dupped_str[1])
+            except:
+                error('Unexpected error accured!')
+                exit()
+            utility_handlers[handler_index](index)
         elif ('hp' in self.player.inventory[index].tags):
             self.player.heal(index)
         else:
@@ -104,7 +110,11 @@ class Game:
         if (len(dupped_str) != 1):
             self.unknown_command_dialog()
             return
+        print()
         self.player.print_info()
+        block = self.map.get(self.player.location)
+        print(f'current block is {colored(block.name,"magenta")}')
+        print()
     
     def attack(self, dupped_str):
         #TODO:complete
@@ -118,8 +128,30 @@ class Game:
         #TODO:complete
         print('base')
     
-    def use_compass(self, index):
-        print('fuck')
+    def commands(self, dupped_str):
+        #TODO:complete
+        print('base')
+    
+    def map(self, dupped_str):
+        self.map.print_map()
+    
+    def use_compass(self, inventory_index):
+        print()
+        print(self.map.compass(self.player.location))
+        print()
 
-    def dig_here(self, index):
-        print('fuck')
+    def dig_here(self, inventory_index):
+        block = self.map.get(self.player.location)
+        if (not isinstance(block, DigableBlock)):
+            ConsoleHandler.cant_dig_here_dialog()
+            return
+        self.player.use_utility(inventory_index)
+        print()
+        if (block.contains_item):
+            block.contains_item = False
+            item = block.item_inside
+            ConsoleHandler.found_item_dialog(item.name)
+            self.player.add_item(item)
+        else:
+            ConsoleHandler.didnt_find_item_dialog()
+        print()
