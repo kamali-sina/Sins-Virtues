@@ -31,12 +31,10 @@ class Player:
         print()
     
     def print_info(self):
-        print()
         print(colored("hp",'green') + f': {self.hp}')
         print(colored("gold",'yellow') + f': {self.gold}')
         print(colored("location",'blue') + f': {self.location}')
         print(f'{len(self.inventory)} item(s) in ' + colored("inventory",'cyan'))
-        print()
     
     def index_item(self, item_name):
         for i in range(len(self.inventory)):
@@ -60,3 +58,6 @@ class Player:
         item.uses -= 1
         if (item.uses == 0):
             self.inventory.pop(index)
+    
+    def add_item(self, item):
+        self.inventory.append(item)
