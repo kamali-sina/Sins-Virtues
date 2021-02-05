@@ -20,7 +20,6 @@ class Game:
         self.idiot_counter = 0
         self.state = 'normal'
         while(True):
-            #TODO: dialog after reaching new block
             self.set_command_set()
             input_str = input("> ").strip().lower()
             self.process_input(input_str)
@@ -72,6 +71,7 @@ class Game:
                 ConsoleHandler.out_of_bounds_dialog()
                 return
             self.player.move(moveset_handler[index])
+            #TODO: dialog after reaching new block
         except:
             print(dupped_str[1])
             self.unknown_command_dialog()
@@ -129,8 +129,13 @@ class Game:
         print('base')
     
     def commands(self, dupped_str):
-        #TODO:complete
-        print('base')
+        if (len(dupped_str) != 1):
+            self.unknown_command_dialog()
+            return
+        print('\nAvailable commands:')
+        for x in self.current_commandset:
+            print(f'                  {colored("-", "cyan")}{x}')
+        print()
     
     def map(self, dupped_str):
         self.map.print_map()
