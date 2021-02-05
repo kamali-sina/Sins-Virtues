@@ -52,3 +52,12 @@ def dont_have_items_dialog():
 
 def cant_use_item_dialog():
     dialog('You', "I can't use that item!", 'yellow', speed=17)
+
+def cant_dig_here_dialog():
+    dialog('You', "This is not a digable block!", 'yellow', speed=17)
+
+def found_item_dialog(item_name):
+    dialog('You', f"I found a {item_name}!", 'yellow', speed=17)
+
+def didnt_find_item_dialog():
+    dialog('You', "There was nothing here!", 'yellow', speed=17)
