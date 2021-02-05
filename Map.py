@@ -1,4 +1,5 @@
 from Block import *
+from termcolor import colored
 from random import random
 
 
@@ -41,6 +42,8 @@ class Map:
             if (abs(cords[0]) < tup[2][0] and abs(cords[1]) < tup[2][1]):
                 continue
             self.map[index[0]][index[1]] = tup[0]()
+            if (tup[0].__name__ == 'CastleBlock'):
+                self.castle_location = index
             i -= 1
     
     def get_random_block(self, tensor):
@@ -70,13 +73,32 @@ class Map:
                 print(self.map[i][j], end = "  ")
             print()
     
-    def is_location_valid(self, tup):
+    def tup_to_index(self, tup):
         val = (MAP_SIZE - 1)//2
         indexes = (val - tup[0],tup[1] + val)
+        return indexes
+    
+    def is_location_valid(self, tup):
+        indexes = self.tup_to_index(tup)
         if (indexes[0] < MAP_SIZE and indexes[1] < MAP_SIZE and indexes[0] >= 0 and indexes[1] >= 0):
             return True
         return False
 
-    def compass(self):
-        #TODO: complete this
-        print('compass')
+    def get(self, tup):
+        indexes = self.tup_to_index(tup)
+        return self.map[indexes[0]][indexes[1]]
+
+    def compass(self, tup):
+        vector = (self.castle_location[0] - tup[0], self.castle_location[1] - tup[1])
+        if (vector[0] == 0 and vector[1] == 0):
+            return 'This is the castle block!'
+        direction = ''
+        if (vector[0] > 0):
+            direction += 'north'
+        elif (vector[0] < 0):
+            direction += 'south'
+        if (vector[1] > 0):
+            direction += 'east'
+        elif (vector[1] < 0):
+            direction += 'west'
+        return f'The castle is {colored(direction, "cyan")} from here'
