@@ -43,7 +43,7 @@ class Map:
                 continue
             self.map[index[0]][index[1]] = tup[0]()
             if (tup[0].__name__ == 'CastleBlock'):
-                self.castle_location = index
+                self.castle_location = cords
             i -= 1
     
     def get_random_block(self, tensor):
@@ -76,6 +76,11 @@ class Map:
     def tup_to_index(self, tup):
         val = (MAP_SIZE - 1)//2
         indexes = (val - tup[0],tup[1] + val)
+        return indexes
+
+    def index_to_tup(self, index):
+        val = (MAP_SIZE - 1)//2
+        indexes = (val - index[0],index[1] - val)
         return indexes
     
     def is_location_valid(self, tup):
