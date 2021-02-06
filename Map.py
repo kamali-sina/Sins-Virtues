@@ -67,9 +67,13 @@ class Map:
             tensor[i] = tensor[i] / s
         return tensor
 
-    def print_map(self):
-        for i in range(13):
-            for j in range(13):
+    def print_map(self, tup):
+        indexes = self.tup_to_index(tup)
+        for i in range(MAP_SIZE):
+            for j in range(MAP_SIZE):
+                if (indexes[0] == i and indexes[1] == j):
+                    print(colored(self.map[i][j], 'blue'), end = "  ")
+                    continue
                 print(self.map[i][j], end = "  ")
             print()
     
@@ -107,3 +111,13 @@ class Map:
         elif (vector[1] < 0):
             direction += 'west'
         return f'The castle is {colored(direction, "cyan")} from here'
+
+    def get_adjacent_blocks(self, tup):
+        x = set()
+        for i in [-1,0,1]:
+            for j in [-1,0,1]:
+                l = (tup[0] + i, tup[1] + j)
+                if (not self.is_location_valid(l)): continue
+                indexes = self.tup_to_index(l)
+                if (not(i == 0 and j == 0)): x.add(type(self.map[indexes[0]][indexes[1]]))
+        return x
