@@ -52,10 +52,12 @@ class Game:
     
     def unknown_command_dialog(self):
         self.idiot_counter += 1
+        print()
         if (self.idiot_counter > 2):
             dialog('You', "I am bec oming bo bo idiot m an! maybe I should study the to turial?", 'yellow', speed=12)
             return
         dialog('You', "I do not know how to do that!", 'yellow', speed=15)
+        print()
         return
     
     def move(self, dupped_str):
@@ -66,14 +68,13 @@ class Game:
             return
         try:
             index = moveset.index(dupped_str[1])
-            tup = (self.player.location[0] + moveset_handler[index][0] , self.player.location[1] + moveset_handler[index][1])
+            tup = (self.player.location[0] + moveset_handler[index][0] ,self.player.location[1] + moveset_handler[index][1])
             if (not self.map.is_location_valid(tup)):
                 ConsoleHandler.out_of_bounds_dialog()
                 return
             self.player.move(moveset_handler[index])
-            #TODO: dialog after reaching new block
+            self.new_block_dialog()
         except:
-            print(dupped_str[1])
             self.unknown_command_dialog()
         return
     
@@ -159,4 +160,10 @@ class Game:
             self.player.add_item(item)
         else:
             ConsoleHandler.didnt_find_item_dialog()
+        print()
+    
+    def new_block_dialog(self):
+        current_block = self.map.get(self.player.location)
+        print()
+        ConsoleHandler.new_block_reached_dialog(current_block)
         print()
