@@ -1,11 +1,12 @@
 from random import random
 from termcolor import colored, cprint
 
-ALL_TAGS = ['utility', 'attack', 'hp']
+ALL_TAGS = ['utility', 'attack', 'hp', 'random']
 
 class Item:
     def __init__(self):
         self.name = "ite"
+        self.rarity = 1
         self.tags = []
 
     def __str__(self):
@@ -44,22 +45,25 @@ class AttackItem(Item):
 
 class Shovel(UtilityItem):
     def __init__(self):
-        self.INITIAL_USES = 3
-        self.tags = ["utility"]
+        self.INITIAL_USES = 4
+        self.rarity = 3
+        self.tags = ["utility", 'random']
         self.name = "shovel"
         self.uses = self.INITIAL_USES
 
 class Compass(UtilityItem):
     def __init__(self):
+        self.rarity = 9
         self.INITIAL_USES = 9999 #inf
-        self.tags = ["utility"]
+        self.tags = ["utility", 'random']
         self.name = "compass"
         self.uses = self.INITIAL_USES
 
 class Knife(AttackItem):
     def __init__(self):
         self.INITIAL_USES = 6
-        self.tags = ["utility", 'attack']
+        self.rarity = 5
+        self.tags = ["utility", 'attack', 'random']
         self.name = "knife"
         self.uses = self.INITIAL_USES
         self.damage = 5
@@ -68,7 +72,8 @@ class Knife(AttackItem):
 
 class Sword(AttackItem):
     def __init__(self):
-        self.tags = ['attack']
+        self.tags = ['attack', 'random']
+        self.rarity = 13
         self.name = "sword"
         self.damage = 10
         #TODO: think about this
@@ -76,19 +81,39 @@ class Sword(AttackItem):
 
 class Apple(HpItem):
     def __init__(self):
-        self.tags = ["hp"]
+        self.rarity = 3
+        self.tags = ["hp", 'random']
         self.name = "apple"
         self.hp = 3
 
 class Meat(HpItem):
     def __init__(self):
+        self.rarity = 5
         self.name = "meat"
-        self.tags = ['attack', 'hp']
+        self.tags = ['attack', 'hp', 'random']
         self.damage = 1
         self.hp = 6
 
 ALL_ITEMS = [Shovel, Compass, Knife, Sword, Apple, Meat]
+ITEM_TENSOR = []
+
+def make_item_tensor():
+    for i in ALL_ITEMS:
+        j = i()
+        if ('random' not in j.tags):
+            ITEM_TENSOR.append(0)
+            continue
+        ITEM_TENSOR.append(1 / j.rarity)
+    s = sum(ITEM_TENSOR)
+    for i in range(len(ITEM_TENSOR)):
+        ITEM_TENSOR[i] = ITEM_TENSOR[i] / s
+
 def get_random_item(luck_factor=0):
     """luck_factor is a number between 0 and 1"""
-    index = int(random() * len(ALL_ITEMS))
-    return ALL_ITEMS[index]()
+    if (len(ITEM_TENSOR) == 0):
+        make_item_tensor()
+    val = random()
+    for i in range(len(ITEM_TENSOR)):
+        if (val < ITEM_TENSOR[i]):
+            return ALL_ITEMS[i]()
+        val -= ITEM_TENSOR[i]
