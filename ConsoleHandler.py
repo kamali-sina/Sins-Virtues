@@ -61,3 +61,6 @@ def found_item_dialog(item_name):
 
 def didnt_find_item_dialog():
     dialog('You', "There was nothing here!", 'yellow', speed=17)
+
+def new_block_reached_dialog(block):
+    dialog('You', f"A {block.name} block! {block.get_info()}", 'yellow', speed=25)
