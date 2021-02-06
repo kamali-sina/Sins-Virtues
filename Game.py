@@ -1,6 +1,7 @@
 from ConsoleHandler import slow, intro_cutscene, dialog, error
 import ConsoleHandler
-from Block import DigableBlock
+from Block import DigableBlock, NormalBlock
+import Block
 from termcolor import colored
 from Player import Player
 from Map import Map
@@ -9,9 +10,11 @@ from Map import Map
 class Game:
     def __init__(self,path_to_savefiles=None, newgame=True):
         self.NORMAL_COMMANDS = ['move', 'inventory', 'use', 'info', 'commands', 'map']
-        self.NORMAL_COMMANDS_HANDLER = [self.move, self.inventory, self.use, self.info, self.commands, self.map]
+        self.NORMAL_COMMANDS_HANDLER = [self.move, self.inventory, self.use, self.info, self.commands, self.pmap]
         self.FIGHT_COMMANDS = ['inventory', 'info', 'use', 'attack', 'counter', 'sneak', 'commands']
         self.FIGHT_COMMANDS_HANDLER = [self.inventory, self.info, self.use, self.attack, self.counter, self.sneak, self.commands]
+        self.PROMPT_COMMANDS = ['yes', 'no', 'y', 'n']
+        self.PROMPT_COMMANDS_HANDLER = [self.prompt_handler, self.prompt_handler, self.prompt_handler, self.prompt_handler]
         # intro_cutscene()
         self.player = Player(path_to_savefiles)
         self.map = Map(path_to_savefiles)
@@ -31,6 +34,9 @@ class Game:
         elif (self.state == 'fight'):
             self.current_commandset = self.FIGHT_COMMANDS
             self.current_commandset_handler = self.FIGHT_COMMANDS_HANDLER
+        elif (self.state == 'prompt'):
+            self.current_commandset = self.PROMPT_COMMANDS
+            self.current_commandset_handler = self.PROMPT_COMMANDS_HANDLER
     
     def process_input(self, input_str):
         if (not self.validate_input(input_str)): return
@@ -68,14 +74,15 @@ class Game:
             return
         try:
             index = moveset.index(dupped_str[1])
-            tup = (self.player.location[0] + moveset_handler[index][0] ,self.player.location[1] + moveset_handler[index][1])
-            if (not self.map.is_location_valid(tup)):
-                ConsoleHandler.out_of_bounds_dialog()
-                return
-            self.player.move(moveset_handler[index])
-            self.new_block_dialog()
         except:
             self.unknown_command_dialog()
+            return
+        tup = (self.player.location[0] + moveset_handler[index][0] ,self.player.location[1] + moveset_handler[index][1])
+        if (not self.map.is_location_valid(tup)):
+            ConsoleHandler.out_of_bounds_dialog()
+            return
+        self.player.move(moveset_handler[index])
+        self.new_block_dialog()
         return
     
     def inventory(self, dupped_str):
@@ -138,8 +145,13 @@ class Game:
             print(f'                  {colored("-", "cyan")}{x}')
         print()
     
-    def map(self, dupped_str):
-        self.map.print_map()
+    def pmap(self, dupped_str):
+        self.map.print_map(self.player.location)
+    
+    def prompt_handler(self, dupped_str):
+        #TODO:complete
+        self.state = 'normal'
+        print('base')
     
     def use_compass(self, inventory_index):
         print()
@@ -163,7 +175,27 @@ class Game:
         print()
     
     def new_block_dialog(self):
+        #TODO: complete mojaver blocks
         current_block = self.map.get(self.player.location)
+        adjacent_dialog = self.adjacent_dialogs().strip()
         print()
         ConsoleHandler.new_block_reached_dialog(current_block)
+        if (len(adjacent_dialog) > 0):
+            dialog("You",adjacent_dialog, "yellow", speed=30)
+        if (current_block.has_special_prompt):
+            slow(current_block.get_prompt() + '\n')
+            self.state = 'prompt'
         print()
+    
+    def adjacent_dialogs(self):
+        blocks = [Block.HomeBlock]
+        blocks_dialog = ['I can see a faint light emitting nearby...']
+        full_dialog = ''
+        s = self.map.get_adjacent_blocks(self.player.location)
+        for item in s:
+            try:
+                index = blocks.index(item)
+                full_dialog += blocks_dialog[index] + '\n'
+            except:
+                continue
+        return full_dialog
