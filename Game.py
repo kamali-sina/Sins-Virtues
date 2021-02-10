@@ -149,7 +149,14 @@ class Game:
         self.map.print_map(self.player.location)
     
     def prompt_handler(self, dupped_str):
-        #TODO:complete
+        if (len(dupped_str) != 1):
+            self.unknown_command_dialog()
+            return
+        ans = 0
+        if (dupped_str[0] in ['yes', 'y']):
+            ans = 1
+        response = self.map.get(self.player.location).prompt_handler(ans, self)
+        #print response dialog
         self.state = 'normal'
         print('base')
     
@@ -175,7 +182,6 @@ class Game:
         print()
     
     def new_block_dialog(self):
-        #TODO: complete mojaver blocks
         current_block = self.map.get(self.player.location)
         adjacent_dialog = self.adjacent_dialogs().strip()
         print()
@@ -188,6 +194,7 @@ class Game:
         print()
     
     def adjacent_dialogs(self):
+        #FIXME: complete mojaver blocks
         blocks = [Block.HomeBlock]
         blocks_dialog = ['I can see a faint light emitting nearby...']
         full_dialog = ''
@@ -199,3 +206,8 @@ class Game:
             except:
                 continue
         return full_dialog
+    
+    def fight_enemy(self, enemy):
+        self.state = 'fight'
+        #TODO: Implement fighting here
+        self.state = 'normal'
