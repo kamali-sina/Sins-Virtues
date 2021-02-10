@@ -61,3 +61,6 @@ class Player:
     
     def add_item(self, item):
         self.inventory.append(item)
+    
+    def refill_hp(self):
+        self.hp = STARTING_MAX_hp
