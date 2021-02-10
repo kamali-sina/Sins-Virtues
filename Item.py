@@ -62,7 +62,7 @@ class Compass(UtilityItem):
         self.name = "compass"
         self.uses = self.INITIAL_USES
 
-class Fisr(AttackItem):
+class Fist(AttackItem):
     def __init__(self):
         self.tags = ['attack']
         self.rarity = 13
