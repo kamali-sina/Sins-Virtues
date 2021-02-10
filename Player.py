@@ -1,9 +1,10 @@
 from termcolor import colored, cprint
-from Item import get_random_item, HpItem
+from Item import get_random_item, HpItem, Fist
 
 STARTING_MAX_hp = 10
 STARTING_GOLD = 0
 STARTING_LOCATION = [0,0]
+STARTING_EQIPPED_ITEM = Fist()
 
 class Player:
     def __init__(self, path_to_save=None):
@@ -14,6 +15,7 @@ class Player:
         self.hp = STARTING_MAX_hp
         self.gold = STARTING_GOLD
         self.location = STARTING_LOCATION
+        self.equipped = STARTING_EQIPPED_ITEM
         # if (path_to_save):
         #     self.load_from_save(path_to_save)
 
@@ -64,3 +66,6 @@ class Player:
     
     def refill_hp(self):
         self.hp = STARTING_MAX_hp
+    
+    def equip_item(self, item):
+        self.equip_item = item
