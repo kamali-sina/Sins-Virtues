@@ -4,6 +4,7 @@ class Enemy:
     def __init__(self):
         self.name = ""
         self.hp = 0
+        self.speed = 0
         self.att_dmg = 0
 
 class Guy(Enemy):
@@ -11,6 +12,7 @@ class Guy(Enemy):
     def __init__(self):
         self.name = "guy"
         self.hp = 1
+        self.speed = 1
         self.att_dmg = 1
 
 class Wolf(Enemy):
@@ -19,12 +21,14 @@ class Wolf(Enemy):
         self.name = "wolf"
         self.hp = 4
         self.att_dmg = 3
+        self.speed = 8
 
 class BloatedBoss(Enemy):
     def __init__(self):
         self.name = "bloated"
         self.hp = 20
         self.att_dmg = 8
+        self.speed = 6
 
 normal_enemys = [Guy, Wolf]
 
