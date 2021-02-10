@@ -35,6 +35,7 @@ class AttackItem(Item):
     def __init__(self):
         self.tags = ['attack']
         self.name = "sword"
+        self.speed = 0
         self.damage = 0
         #TODO: think about this
         self.agile_mult = 1
@@ -47,7 +48,9 @@ class Shovel(UtilityItem):
     def __init__(self):
         self.INITIAL_USES = 4
         self.rarity = 3
-        self.tags = ["utility", 'random']
+        self.tags = ["utility", 'random', 'attack']
+        self.damage = 3
+        self.speed = 4
         self.name = "shovel"
         self.uses = self.INITIAL_USES
 
@@ -59,10 +62,21 @@ class Compass(UtilityItem):
         self.name = "compass"
         self.uses = self.INITIAL_USES
 
+class Fisr(AttackItem):
+    def __init__(self):
+        self.tags = ['attack']
+        self.rarity = 13
+        self.name = "fist"
+        self.damage = 2
+        self.speed = 2
+        #TODO: think about this
+        self.agile_mult = 1
+
 class Knife(AttackItem):
     def __init__(self):
         self.INITIAL_USES = 6
         self.rarity = 5
+        self.speed = 9
         self.tags = ["utility", 'attack', 'random']
         self.name = "knife"
         self.uses = self.INITIAL_USES
@@ -76,6 +90,7 @@ class Sword(AttackItem):
         self.rarity = 13
         self.name = "sword"
         self.damage = 10
+        self.speed = 7
         #TODO: think about this
         self.agile_mult = 1
 
@@ -92,6 +107,7 @@ class Meat(HpItem):
         self.name = "meat"
         self.tags = ['attack', 'hp', 'random']
         self.damage = 1
+        self.speed = 1
         self.hp = 6
 
 ALL_ITEMS = [Shovel, Compass, Knife, Sword, Apple, Meat]
