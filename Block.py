@@ -28,6 +28,14 @@ class CastleBlock(Block):
     
     def get_prompt(self):
         return 'There is no turning back now, Do you want to enter the castle?(y,n)'
+    
+    def prompt_handler(self, ans, game):
+        if (ans == 0):
+            response = 'Oh thank god! This place looks scary af!'
+        else:
+            response = 'Here goes nothing...'
+            # TODO: I still dont know what to do here
+        return response
 
 
 class DigableBlock(Block):
@@ -65,6 +73,16 @@ class NormalBlock(Block):
     
     def get_prompt(self):
         return 'Open the chest?(y,n)'
+    
+    def prompt_handler(self, ans, game):
+        if (ans == 0):
+            response = "Ok I'll play it safe"
+        else:
+            self.contains_item = False
+            self.has_special_prompt = False
+            game.player.add_item(self.item_inside)
+            response = f'Found a {self.item_inside.name} in the chest!'
+        return response
 
     def __str__(self):
         me = self.name
@@ -80,9 +98,11 @@ class HomeBlock(Block):
         self.rarity = 70
         self.name = "home"
         self.has_special_prompt = True
+        self.contains_item = True
         self.contains_enemy = random() < self.ENEMY_CHANCE
         if (self.contains_enemy):
             self.enemy = get_random_enemy()
+        self.item_inside = Item.get_random_item(luck_factor=0)
 
     def get_info(self):
         return 'This looks like a place to rest.'
@@ -90,5 +110,21 @@ class HomeBlock(Block):
     def get_prompt(self):
         return 'Enter the home?(y,n)'
 
+    def prompt_handler(self, ans, game):
+        response = ''
+        if (ans == 0):
+            response = 'Good idea, there might be people in there'
+        else:
+            #TODO: response
+            if self.contains_enemy:
+                response = 'Oh no'
+                game.state = 'fight'
+                self.contains_enemy = False
+            else:
+                game.player.refill_hp()
+                if (self.contains_item):
+                    self.contains_item = False
+                    game.player.add_item(self.item_inside)
+        return response
 
 ALL_BLOCKS = [CastleBlock, DigableBlock, NormalBlock, HomeBlock]
