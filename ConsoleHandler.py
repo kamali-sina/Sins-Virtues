@@ -64,3 +64,12 @@ def didnt_find_item_dialog():
 
 def new_block_reached_dialog(block):
     print(f'{colored("You","yellow")}: reached a {block.name} block. {block.get_info()}')
+
+def death_dialog():
+    dialog('You', "fuck, is this what death is? god damn it hurts...\nI'm just gonna close my eyes for a little bit...\n\ngoodbye...", 'yellow', speed=6)
+
+def default_kill_dialog(enemy_name):
+    dialog('You', "It's over, time to move on...", 'yellow', speed=17)
+
+def cant_attack_with_item_dialog(item_name):
+    dialog('You', "I can't attack with that item!", 'yellow', speed=23)
