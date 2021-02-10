@@ -118,7 +118,7 @@ class HomeBlock(Block):
             #TODO: response
             if self.contains_enemy:
                 response = 'Oh no'
-                game.state = 'fight'
+                #TODO: fight
                 self.contains_enemy = False
             else:
                 game.player.refill_hp()
