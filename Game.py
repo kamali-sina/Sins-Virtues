@@ -5,14 +5,14 @@ import Block
 from termcolor import colored
 from Player import Player
 from Map import Map
-
+#TODO: think about fight mechanics completely!
 
 class Game:
     def __init__(self,path_to_savefiles=None, newgame=True):
-        self.NORMAL_COMMANDS = ['move', 'inventory', 'use', 'info', 'commands', 'map']
-        self.NORMAL_COMMANDS_HANDLER = [self.move, self.inventory, self.use, self.info, self.commands, self.pmap]
-        self.FIGHT_COMMANDS = ['inventory', 'info', 'use', 'attack', 'counter', 'sneak', 'commands']
-        self.FIGHT_COMMANDS_HANDLER = [self.inventory, self.info, self.use, self.attack, self.counter, self.sneak, self.commands]
+        self.NORMAL_COMMANDS = ['move', 'inventory', 'use', 'info', 'commands', 'map', 'equip']
+        self.NORMAL_COMMANDS_HANDLER = [self.move, self.inventory, self.use, self.info, self.commands, self.pmap, self.equip]
+        self.FIGHT_COMMANDS = ['inventory', 'info', 'use', 'attack', 'counter', 'sneak', 'commands', 'equip']
+        self.FIGHT_COMMANDS_HANDLER = [self.inventory, self.info, self.use, self.attack, self.counter, self.sneak, self.commands, self.equip]
         self.PROMPT_COMMANDS = ['yes', 'no', 'y', 'n']
         self.PROMPT_COMMANDS_HANDLER = [self.prompt_handler, self.prompt_handler, self.prompt_handler, self.prompt_handler]
         # intro_cutscene()
@@ -91,6 +91,20 @@ class Game:
             return
         self.player.print_inventory()
     
+    def equip(self, dupped_str):
+        if (len(dupped_str) < 2):
+            self.unknown_command_dialog()
+            return
+        index = self.player.index_item(dupped_str[1])
+        if (index == -1):
+            ConsoleHandler.dont_have_items_dialog()
+            return
+        if('attack' in self.player.inventory[index].tags):
+            self.player.equip_item(self.player.inventory[index])
+            print(f'\nequipped item is now {colored(self.player.equipped,"red")}\n')
+        else:
+            ConsoleHandler.cant_attack_with_item_dialog()
+
     def use(self, dupped_str):
         utility_items = ['shovel', 'compass']
         utility_handlers = [self.dig_here, self.use_compass]
@@ -209,5 +223,16 @@ class Game:
     
     def fight_enemy(self, enemy):
         self.state = 'fight'
-        #TODO: Implement fighting here
+        self.enemy = enemy
+        while(True):
+            self.set_command_set()
+            input_str = input("> ").strip().lower()
+            self.process_input(input_str)
+            if (player.hp <= 0):
+                ConsoleHandler.death_dialog()
+                exit()
+            elif(enemy.hp <= 0):
+                #TODO: if boss do something!
+                ConsoleHandler.default_kill_dialog()
+                break
         self.state = 'normal'
