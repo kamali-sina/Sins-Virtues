@@ -1,6 +1,6 @@
 from random import random
 import Item
-from Enemy import get_random_enemy
+from Enemy import get_random_enemy, get_endgame_boss
 from termcolor import colored
 from time import sleep
 
@@ -20,10 +20,20 @@ class Block:
 
 class CastleBlock(Block):
     def __init__(self):
+        MAX_NUMBER_OF_ENEMIES = 4
+        self.number_of_enemies = int(random() * MAX_NUMBER_OF_ENEMIES) + 1
         self.rarity = 9999
         self.name = "castle"
+        self.enemies = []
+        self.boss = None
         self.has_special_prompt = True
         self.tags = ['special']
+        self.init_enemies
+    
+    def init_enemies(self):
+        for i in range(self.number_of_enemies):
+            self.enemies.append(get_random_enemy())
+        self.boss = get_endgame_boss()
     
     def get_info(self):
         return 'A castle in the middle of nowhere?!'
