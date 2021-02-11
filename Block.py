@@ -1,6 +1,8 @@
 from random import random
 import Item
 from Enemy import get_random_enemy
+from termcolor import colored
+from time import sleep
 
 class Block:
     def __init__(self):
@@ -93,7 +95,7 @@ class NormalBlock(Block):
 
 class HomeBlock(Block):
     def __init__(self):
-        self.ENEMY_CHANCE = 0.3
+        self.ENEMY_CHANCE = 0.6
         self.tags = ['random', 'special']
         self.rarity = 70
         self.name = "home"
@@ -115,16 +117,23 @@ class HomeBlock(Block):
         if (ans == 0):
             response = 'Good idea, there might be people in there'
         else:
-            #TODO: response
             if self.contains_enemy:
-                response = 'Oh no'
-                #TODO: fight
+                print(f'there is a {colored(self.enemy.name,"red")} here, I have to fight it!')
+                print(colored('--Entered Battle--','red') + '\n')
+                game.fight_enemy(self.enemy)
                 self.contains_enemy = False
-            else:
-                game.player.refill_hp()
-                if (self.contains_item):
-                    self.contains_item = False
-                    game.player.add_item(self.item_inside)
+                print('now I can rest here')
+            print('resting...')
+            sleep(2)
+            game.player.refill_hp()
+            response += f'health {colored("fully", "green")} restored'
+            if (self.contains_item):
+                self.contains_item = False
+                game.player.add_item(self.item_inside)
+                response += f'\nfound a {self.item_inside.name} here'
         return response
+
+    def __str__(self):
+        return colored(self.name, 'green')
 
 ALL_BLOCKS = [CastleBlock, DigableBlock, NormalBlock, HomeBlock]
