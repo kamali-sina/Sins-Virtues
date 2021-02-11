@@ -15,6 +15,8 @@ class Game:
         self.FIGHT_COMMANDS_HANDLER = [self.inventory, self.info, self.use, self.attack, self.counter, self.sneak, self.commands, self.equip]
         self.PROMPT_COMMANDS = ['yes', 'no', 'y', 'n']
         self.PROMPT_COMMANDS_HANDLER = [self.prompt_handler, self.prompt_handler, self.prompt_handler, self.prompt_handler]
+        self.my_time = float(0)
+        self.enemy_time = float(0)
         # intro_cutscene()
         self.player = Player(path_to_savefiles)
         self.map = Map(path_to_savefiles)
@@ -89,6 +91,7 @@ class Game:
         if (len(dupped_str) != 1):
             self.unknown_command_dialog()
             return
+        self.my_time += 0.5
         self.player.print_inventory()
     
     def equip(self, dupped_str):
@@ -100,6 +103,7 @@ class Game:
             ConsoleHandler.dont_have_items_dialog()
             return
         if('attack' in self.player.inventory[index].tags):
+            self.my_time += 1.5
             self.player.equip_item(self.player.inventory[index])
             print(f'\nequipped item is now {colored(self.player.equipped,"red")}\n')
         else:
@@ -127,6 +131,7 @@ class Game:
         else:
             ConsoleHandler.cant_use_item_dialog()
             return
+        self.my_time += 1
     
     def info(self, dupped_str):
         if (len(dupped_str) != 1):
@@ -135,12 +140,17 @@ class Game:
         print()
         self.player.print_info()
         block = self.map.get(self.player.location)
-        print(f'current block is {colored(block.name,"magenta")}')
+        if (self.state == 'normal'): print(f'current block is {colored(block.name,"magenta")}')
+        elif (self.state == 'fight'): print(f'enemy has {colored(self.enemy.hp,"red")} hp left')
         print()
     
     def attack(self, dupped_str):
-        #TODO:complete
-        print('base')
+        # if (len(dupped_str) != 1):
+        #     self.unknown_command_dialog()
+        #     return
+        self.enemy.hp -= self.player.equipped.damage
+        self.my_time += self.enemy.speed
+        print(f'attacked {colored(self.enemy.name, "magenta")} for {colored(self.player.equipped.damage,"red")} damage!')
     
     def sneak(self, dupped_str):
         #TODO:complete
@@ -169,10 +179,11 @@ class Game:
         ans = 0
         if (dupped_str[0] in ['yes', 'y']):
             ans = 1
+        print()
         response = self.map.get(self.player.location).prompt_handler(ans, self)
-        #print response dialog
+        print(response)
+        print()
         self.state = 'normal'
-        print('base')
     
     def use_compass(self, inventory_index):
         print()
@@ -221,18 +232,29 @@ class Game:
                 continue
         return full_dialog
     
+    def enemy_attack(self):
+        self.player.hp -= self.enemy.damage
+        print(f'\n{self.enemy.name} attacks you for {colored(str(self.enemy.damage), "red")} damage!\n')
+    
     def fight_enemy(self, enemy):
         self.state = 'fight'
+        self.set_command_set()
         self.enemy = enemy
+        self.my_time = float(enemy.speed)
+        self.enemy_time = float(self.player.equipped.speed)
         while(True):
-            self.set_command_set()
-            input_str = input("> ").strip().lower()
-            self.process_input(input_str)
-            if (player.hp <= 0):
+            if (self.enemy_time < self.my_time):
+                #Enemy's turn to attack!
+                self.enemy_attack()
+                self.enemy_time += self.player.equipped.speed
+            else:
+                #our turn to attack
+                input_str = input("> ").strip().lower()
+                self.process_input(input_str)
+            if (self.player.hp <= 0):
                 ConsoleHandler.death_dialog()
                 exit()
-            elif(enemy.hp <= 0):
-                #TODO: if boss do something!
-                ConsoleHandler.default_kill_dialog()
+            elif(self.enemy.hp <= 0):
+                print(f'the {colored(self.enemy, "red")} is dead.')
                 break
         self.state = 'normal'
