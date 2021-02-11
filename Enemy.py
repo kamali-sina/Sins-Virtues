@@ -5,7 +5,7 @@ class Enemy:
         self.name = ""
         self.hp = 0
         self.speed = 0
-        self.att_dmg = 0
+        self.damage = 0
 
 class Guy(Enemy):
     """you can 'talk' with to end fight"""
@@ -13,21 +13,21 @@ class Guy(Enemy):
         self.name = "guy"
         self.hp = 1
         self.speed = 1
-        self.att_dmg = 1
+        self.damage = 1
 
 class Wolf(Enemy):
     """can be given a single meat to end fight"""
     def __init__(self):
         self.name = "wolf"
         self.hp = 4
-        self.att_dmg = 3
-        self.speed = 8
+        self.damage = 3
+        self.speed = 7
 
 class BloatedBoss(Enemy):
     def __init__(self):
         self.name = "bloated"
         self.hp = 20
-        self.att_dmg = 8
+        self.damage = 8
         self.speed = 6
 
 normal_enemys = [Guy, Wolf]
