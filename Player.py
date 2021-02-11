@@ -68,4 +68,4 @@ class Player:
         self.hp = STARTING_MAX_hp
     
     def equip_item(self, item):
-        self.equip_item = item
+        self.equipped = item
