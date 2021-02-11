@@ -37,8 +37,6 @@ class AttackItem(Item):
         self.name = "sword"
         self.speed = 0
         self.damage = 0
-        #TODO: think about this
-        self.agile_mult = 1
 
     def __str__(self):
         return colored(self.name, "red") + ' ---- damage: ' + str(self.damage)
@@ -69,8 +67,6 @@ class Fist(AttackItem):
         self.name = "fist"
         self.damage = 1
         self.speed = 6
-        #TODO: think about this
-        self.agile_mult = 1
 
 class Knife(AttackItem):
     def __init__(self):
@@ -81,8 +77,6 @@ class Knife(AttackItem):
         self.uses = self.INITIAL_USES
         self.damage = 5
         self.speed = 9
-        #TODO: think about this
-        self.agile_mult = 1.5
 
 class Sword(AttackItem):
     def __init__(self):
@@ -91,8 +85,6 @@ class Sword(AttackItem):
         self.name = "sword"
         self.damage = 10
         self.speed = 7
-        #TODO: think about this
-        self.agile_mult = 1
 
 class Apple(HpItem):
     def __init__(self):
