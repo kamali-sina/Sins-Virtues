@@ -5,7 +5,7 @@ import Block
 from termcolor import colored
 from Player import Player
 from Map import Map
-#TODO: think about fight mechanics completely!
+#TODO: add shop blocks and gold
 
 class Game:
     def __init__(self,path_to_savefiles=None, newgame=True):
@@ -249,12 +249,12 @@ class Game:
                 self.enemy_time += self.player.equipped.speed
             else:
                 #our turn to attack
-                input_str = input("> ").strip().lower()
+                input_str = input(colored("> ",'red')).strip().lower()
                 self.process_input(input_str)
             if (self.player.hp <= 0):
                 ConsoleHandler.death_dialog()
                 exit()
             elif(self.enemy.hp <= 0):
-                print(f'the {colored(self.enemy, "red")} is dead.')
+                print(f'the {colored(self.enemy.name, "red")} is dead.')
                 break
         self.state = 'normal'
