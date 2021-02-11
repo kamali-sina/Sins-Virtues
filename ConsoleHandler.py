@@ -73,3 +73,13 @@ def default_kill_dialog(enemy_name):
 
 def cant_attack_with_item_dialog(item_name):
     dialog('You', "I can't attack with that item!", 'yellow', speed=23)
+
+def into_the_castle_dialog(number_of_enemies, boss_name):
+    dialog('You', f"Here goes nothing...\nThere are {number_of_enemies} enemies here and a {boss_name} boss!", 'yellow', speed=23)
+
+def boss_dialog():
+    dialog('You', "Ok time to fight this big bitch!", 'yellow', speed=23)
+
+def outro_dialog():
+    #TODO: complete outro cutscene
+    print('bye bye fuck you')
