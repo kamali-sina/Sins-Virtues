@@ -67,8 +67,8 @@ class Fist(AttackItem):
         self.tags = ['attack']
         self.rarity = 13
         self.name = "fist"
-        self.damage = 2
-        self.speed = 2
+        self.damage = 1
+        self.speed = 6
         #TODO: think about this
         self.agile_mult = 1
 
@@ -76,11 +76,11 @@ class Knife(AttackItem):
     def __init__(self):
         self.INITIAL_USES = 6
         self.rarity = 5
-        self.speed = 9
         self.tags = ["utility", 'attack', 'random']
         self.name = "knife"
         self.uses = self.INITIAL_USES
         self.damage = 5
+        self.speed = 9
         #TODO: think about this
         self.agile_mult = 1.5
 
