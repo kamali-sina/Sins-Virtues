@@ -36,7 +36,7 @@ class CastleBlock(Block):
             response = 'Oh thank god! This place looks scary af!'
         else:
             response = 'Here goes nothing...'
-            # TODO: I still dont know what to do here
+            # TODO: I still dont know what to do here, have an array of enemies and fight every signle one of them!
         return response
 
 
@@ -54,6 +54,9 @@ class DigableBlock(Block):
     def get_info(self):
         return 'It looks like I can dig here with a shovel!'
 
+    def __str__(self):
+        return colored(self.name, 'blue')
+
 
 class NormalBlock(Block):
     def __init__(self):
@@ -65,7 +68,6 @@ class NormalBlock(Block):
         self.has_special_prompt = self.contains_item
         if (self.contains_item):
             self.item_inside = Item.get_random_item(luck_factor=0)
-
 
     def get_info(self):
         if (self.contains_item):
@@ -97,7 +99,7 @@ class HomeBlock(Block):
     def __init__(self):
         self.ENEMY_CHANCE = 0.6
         self.tags = ['random', 'special']
-        self.rarity = 70
+        self.rarity = 80
         self.name = "home"
         self.has_special_prompt = True
         self.contains_item = True
@@ -135,5 +137,6 @@ class HomeBlock(Block):
 
     def __str__(self):
         return colored(self.name, 'green')
+
 
 ALL_BLOCKS = [CastleBlock, DigableBlock, NormalBlock, HomeBlock]
