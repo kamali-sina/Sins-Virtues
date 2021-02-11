@@ -148,7 +148,7 @@ class Game:
         # if (len(dupped_str) != 1):
         #     self.unknown_command_dialog()
         #     return
-        self.enemy.hp -= self.player.equipped.damage
+        self.enemy.get_damaged(self.player.equipped.damage)
         self.my_time += self.enemy.speed
         print(f'attacked {colored(self.enemy.name, "magenta")} for {colored(self.player.equipped.damage,"red")} damage!')
     
