@@ -3,6 +3,7 @@ import Item
 from Enemy import get_random_enemy, get_endgame_boss
 from termcolor import colored
 from time import sleep
+import ConsoleHandler
 
 class Block:
     def __init__(self):
@@ -39,14 +40,23 @@ class CastleBlock(Block):
         return 'A castle in the middle of nowhere?!'
     
     def get_prompt(self):
-        return 'There is no turning back now, Do you want to enter the castle?(y,n)'
+        return 'There is no turning back now, get ready, have healing items, and equip your weapons. Do you want to enter the castle?(y,n)'
     
     def prompt_handler(self, ans, game):
         if (ans == 0):
             response = 'Oh thank god! This place looks scary af!'
         else:
-            response = 'Here goes nothing...'
-            # TODO: I still dont know what to do here, have an array of enemies and fight every signle one of them!
+            ConsoleHandler.into_the_castle_dialog(self.number_of_enemies, self.boss.name)
+            for enemy in self.enemies:
+                game.fight_enemy(enemy)
+                self.number_of_enemies -= 1
+                if (self.number_of_enemies > 0):
+                    print('{self.number_of_enemies} enemies remaining...')
+            ConsoleHandler.boss_dialog()
+            self.boss.intro_dialog()
+            game.fight_enemy(self.boss)
+            ConsoleHandler.outro_dialog()
+            exit()
         return response
 
 
