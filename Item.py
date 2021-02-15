@@ -39,7 +39,7 @@ class AttackItem(Item):
         self.damage = 0
 
     def __str__(self):
-        return colored(self.name, "red") + ' ---- damage: ' + str(self.damage)
+        return colored(self.name, "red") + ' ---- damage: ' + str(self.damage) + ' - speed: ' + str(self.speed)
 
 
 class Shovel(UtilityItem):
@@ -58,6 +58,14 @@ class Compass(UtilityItem):
         self.INITIAL_USES = 9999 #inf
         self.tags = ["utility", 'random']
         self.name = "compass"
+        self.uses = self.INITIAL_USES
+
+class Steroid(UtilityItem):
+    def __init__(self):
+        self.rarity = 11
+        self.INITIAL_USES = 1
+        self.tags = ["utility", 'random']
+        self.name = "steroid"
         self.uses = self.INITIAL_USES
 
 class Fist(AttackItem):
@@ -84,7 +92,7 @@ class Sword(AttackItem):
         self.rarity = 13
         self.name = "sword"
         self.damage = 10
-        self.speed = 7
+        self.speed = 6
 
 class Apple(HpItem):
     def __init__(self):
@@ -92,6 +100,13 @@ class Apple(HpItem):
         self.tags = ["hp", 'random']
         self.name = "apple"
         self.hp = 3
+
+class Celery(HpItem):
+    def __init__(self):
+        self.rarity = 6
+        self.tags = ["hp", 'random']
+        self.name = "celery"
+        self.hp = 15
 
 class Meat(HpItem):
     def __init__(self):
@@ -102,7 +117,7 @@ class Meat(HpItem):
         self.speed = 1
         self.hp = 6
 
-ALL_ITEMS = [Shovel, Compass, Knife, Sword, Apple, Meat]
+ALL_ITEMS = [Shovel, Compass, Knife, Sword, Apple, Meat, Celery, Steroid]
 ITEM_TENSOR = []
 
 def make_item_tensor():
