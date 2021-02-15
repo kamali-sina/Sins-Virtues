@@ -11,13 +11,13 @@ class Game:
     def __init__(self,path_to_savefiles=None, newgame=True):
         self.NORMAL_COMMANDS = ['move', 'inventory', 'use', 'info', 'commands', 'map', 'equip']
         self.NORMAL_COMMANDS_HANDLER = [self.move, self.inventory, self.use, self.info, self.commands, self.pmap, self.equip]
-        self.FIGHT_COMMANDS = ['inventory', 'info', 'use', 'attack', 'counter', 'sneak', 'commands', 'equip']
-        self.FIGHT_COMMANDS_HANDLER = [self.inventory, self.info, self.use, self.attack, self.counter, self.sneak, self.commands, self.equip]
+        self.FIGHT_COMMANDS = ['inventory', 'info', 'use', 'attack', 'commands', 'equip']
+        self.FIGHT_COMMANDS_HANDLER = [self.inventory, self.info, self.use, self.attack, self.commands, self.equip]
         self.PROMPT_COMMANDS = ['yes', 'no', 'y', 'n']
         self.PROMPT_COMMANDS_HANDLER = [self.prompt_handler, self.prompt_handler, self.prompt_handler, self.prompt_handler]
         self.my_time = float(0)
         self.enemy_time = float(0)
-        # intro_cutscene()
+        intro_cutscene()
         self.player = Player(path_to_savefiles)
         self.map = Map(path_to_savefiles)
 
@@ -110,8 +110,8 @@ class Game:
             ConsoleHandler.cant_attack_with_item_dialog()
 
     def use(self, dupped_str):
-        utility_items = ['shovel', 'compass']
-        utility_handlers = [self.dig_here, self.use_compass]
+        utility_items = ['shovel', 'compass', 'steroid']
+        utility_handlers = [self.dig_here, self.use_compass, self.use_steroid]
         if (len(dupped_str) < 2):
             self.unknown_command_dialog()
             return
@@ -152,14 +152,6 @@ class Game:
         self.my_time += self.enemy.speed
         print(f'attacked {colored(self.enemy.name, "magenta")} for {colored(self.player.equipped.damage,"red")} damage!')
     
-    def sneak(self, dupped_str):
-        #TODO:complete
-        print('base')
-    
-    def counter(self, dupped_str):
-        #TODO:complete
-        print('base')
-    
     def commands(self, dupped_str):
         if (len(dupped_str) != 1):
             self.unknown_command_dialog()
@@ -189,6 +181,11 @@ class Game:
         print()
         print(self.map.compass(self.player.location))
         print()
+    
+    def use_steroid(self, inventory_index):
+        self.player.use_utility(inventory_index)
+        self.player.use_steroid(inventory_index)
+        print(f'\nmax hp is now {colored(self.player.max_hp, "red")}\n')
 
     def dig_here(self, inventory_index):
         block = self.map.get(self.player.location)
@@ -219,7 +216,7 @@ class Game:
         print()
     
     def adjacent_dialogs(self):
-        #FIXME: complete mojaver blocks
+        #FIXME: complete mojaver blocks add chest containing block
         blocks = [Block.HomeBlock]
         blocks_dialog = ['I can see a faint light emitting nearby...']
         full_dialog = ''
@@ -237,6 +234,8 @@ class Game:
         print(f'\n{self.enemy.name} attacks you for {colored(str(self.enemy.damage), "red")} damage!\n')
     
     def fight_enemy(self, enemy):
+        print(colored('\n--Entered Battle--','red'))
+        print('enemy info:\n' + str(enemy) + '\n')
         self.state = 'fight'
         self.set_command_set()
         self.enemy = enemy
