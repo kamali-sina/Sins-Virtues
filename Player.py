@@ -12,7 +12,8 @@ class Player:
         #testing
         for i in range(5):
             self.inventory.append(get_random_item())
-        self.hp = STARTING_MAX_hp
+        self.max_hp = STARTING_MAX_hp
+        self.hp = self.max_hp
         self.gold = STARTING_GOLD
         self.location = STARTING_LOCATION
         self.equipped = STARTING_EQIPPED_ITEM
@@ -49,7 +50,7 @@ class Player:
         item = self.inventory.pop(index)
         self.hp = min(10, self.hp + item.hp)
         print()
-        if (self.hp == STARTING_MAX_hp):
+        if (self.hp == self.max_hp):
             print(colored("hp",'green') + ' is now full at ' + str(self.hp))
         else:
             print(colored("hp",'green') + ' is now ' + str(self.hp))
@@ -65,7 +66,12 @@ class Player:
         self.inventory.append(item)
     
     def refill_hp(self):
-        self.hp = STARTING_MAX_hp
+        self.hp = self.max_hp
     
     def equip_item(self, item):
         self.equipped = item
+    
+    def use_steroid(self, index):
+        STEROID_ADD = 5
+        self.max_hp += STEROID_ADD
+        self.hp = self.max_hp
