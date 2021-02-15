@@ -29,7 +29,7 @@ class CastleBlock(Block):
         self.boss = None
         self.has_special_prompt = True
         self.tags = ['special']
-        self.init_enemies
+        self.init_enemies()
     
     def init_enemies(self):
         for i in range(self.number_of_enemies):
@@ -51,14 +51,17 @@ class CastleBlock(Block):
                 game.fight_enemy(enemy)
                 self.number_of_enemies -= 1
                 if (self.number_of_enemies > 0):
-                    print('{self.number_of_enemies} enemies remaining...')
+                    print(f'{self.number_of_enemies} enemies remaining...')
             ConsoleHandler.boss_dialog()
             self.boss.intro_dialog()
             game.fight_enemy(self.boss)
+            print()
             ConsoleHandler.outro_dialog()
             exit()
         return response
 
+    def __str__(self):
+        return colored(self.name, 'yellow')
 
 class DigableBlock(Block):
     def __init__(self):
@@ -75,7 +78,7 @@ class DigableBlock(Block):
         return 'It looks like I can dig here with a shovel!'
 
     def __str__(self):
-        return colored(self.name, 'blue')
+        return colored(self.name, 'red')
 
 
 class NormalBlock(Block):
@@ -141,7 +144,6 @@ class HomeBlock(Block):
         else:
             if self.contains_enemy:
                 print(f'there is a {colored(self.enemy.name,"red")} here, I have to fight it!')
-                print(colored('--Entered Battle--','red') + '\n')
                 game.fight_enemy(self.enemy)
                 self.contains_enemy = False
                 print('now I can rest here')
