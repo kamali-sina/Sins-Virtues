@@ -14,6 +14,9 @@ class Enemy:
 
     def get_damaged(self, damage):
         self.hp -= damage
+    
+    def __str__(self):
+        return f"name: {self.name} - hp: {self.hp} - speed: {self.speed} - damage: {self.damage}"
 
 class Boss(Enemy):
     def __init__(self):
@@ -45,8 +48,8 @@ class BigBob(Enemy):
     def __init__(self):
         self.name = "big bob"
         self.hp = 12
-        self.damage = 8
-        self.speed = 2
+        self.damage = 6
+        self.speed = 3
 
 class BloatedBoss(Boss):
     def __init__(self):
@@ -54,7 +57,7 @@ class BloatedBoss(Boss):
         self.hp = 20
         self.healing = 1
         self.damage = 7
-        self.speed = 5
+        self.speed = 4
 
     def get_damaged(self, damage):
         self.hp -= damage
@@ -63,7 +66,7 @@ class BloatedBoss(Boss):
             print(f'{colored("bloated", "red")} is healing it self...', end='')
             sys.stdout.flush()
             sleep(1.5)
-            self.hp += 7
+            self.hp += 5
             print(f'bloated now has {colored(self.hp, "red")} hp')
     
     def intro_dialog(self):
