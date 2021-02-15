@@ -1,6 +1,19 @@
 from termcolor import colored, cprint
 import sys
 from time import sleep
+import os
+import threading
+import pyautogui
+import getch
+# from _Getch import getch
+
+data_ready = threading.Event()
+
+class KeyboardPoller( threading.Thread ) :
+    def run( self ) :
+        getch.getch()
+        data_ready.set()
+        return
 
 HELPS = ['-h', '--help']
 NEWGAME = '-n'
@@ -9,13 +22,13 @@ LOADGAME = '-s'
 TOTURIALS = ['-t', '--toturial']
 
 def error(string):
-    cprint(f'ERROR: {string}','red')
+    cprint(f"ERROR: {string}",'red')
 
 def dialog(name ,text, color, speed=13):
     cprint(f'{name}: ',color,end="")
     text = text.strip()
-    text += '\n'
     slow(text, speed=speed)
+    print()
 
 def help_if_needed(string):
     if (string in HELPS):
@@ -30,10 +43,21 @@ def help_if_needed(string):
 
 def slow(text, speed=13):
     """function which displays characters one at a time"""
-    for letters in text:
-        print(letters, end="")
+    poller = KeyboardPoller()
+    poller.start()
+    for i in range(len(text)):
+        print(text[i], end="")
+        if (data_ready.isSet()):
+            data_ready.clear()
+            poller.join()
+            print(text[i+1:], end="")
+            sys.stdout.flush()
+            return
         sys.stdout.flush()
         sleep(1/speed)
+    pyautogui.press('a')
+    data_ready.clear()
+    poller.join()
 
 def intro_cutscene():
     dialog('Unknown', "Have you ever been to the SinkuLand?\n", 'red', speed=8)
@@ -81,5 +105,17 @@ def boss_dialog():
     dialog('You', "Ok time to fight this big bitch!", 'yellow', speed=23)
 
 def outro_dialog():
-    #TODO: complete outro cutscene
-    print('bye bye fuck you')
+    dialog('You', " *panting* holy shit it's over... what is that over there?", 'yellow', speed=15)
+    sleep(1)
+    dialog('You', "what the hell? is that... me? hey you ok man?", 'yellow', speed=15)
+    print('*you try to wake yourself up*')
+    sleep(1)
+    cprint('\n> A white light fills the room\n','magenta')
+    sleep(1)
+    dialog('Unknown', "Open your eyes, did you know where you just went?", 'red', speed=15)
+    dialog('You', "*trying to open eyes* what? no. where am I?", 'yellow', speed=15)
+    dialog('Unknown', "You are back in your room. The simulation is over.", 'red', speed=15)
+    dialog('You', "Is this real? was that real? what just happened?", 'yellow', speed=15)
+    dialog('Unknown', "A thought that shapes in your head has found meaning. No one knows where is SinkuLand and what are the creatures that live there, but each time you go inside, we learn a bit more! We'll be waiting for you on the other side. ", 'red', speed=15)
+    dialog('You', "*you turn of the computer*", 'yellow', speed=15)
+    print('\nThe End\n')
