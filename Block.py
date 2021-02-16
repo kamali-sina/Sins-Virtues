@@ -161,4 +161,34 @@ class HomeBlock(Block):
         return colored(self.name, 'green')
 
 
-ALL_BLOCKS = [CastleBlock, DigableBlock, NormalBlock, HomeBlock]
+class ShopBlock(Block):
+    def __init__(self):
+        self.tags = ['random', 'special']
+        self.rarity = 100
+        self.name = "shop"
+        self.has_special_prompt = True
+        self.stock = self.make_stock()
+    
+    def make_stock(self):
+        #TODO: complete, use rarity as a price indicator
+        print('todo')
+    
+    def get_info(self):
+        return 'I can spend the coins I found here.'
+    
+    def get_prompt(self):
+        return 'Enter the shop?(y,n)'
+
+    def prompt_handler(self, ans, game):
+        response = ''
+        if (ans == 0):
+            response = "I'll come back when I have more money"
+        else:
+            #TODO: complete logic here
+            print('base')
+        return response
+
+    def __str__(self):
+        return colored(self.name, 'yellow')
+
+ALL_BLOCKS = [CastleBlock, DigableBlock, NormalBlock, HomeBlock, ShopBlock]
