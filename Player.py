@@ -1,6 +1,5 @@
 from termcolor import colored, cprint
-from Item import get_random_item, HpItem, Fist
-
+from Item import get_random_item, HpItem, Fist, CoinItem
 STARTING_MAX_hp = 10
 STARTING_GOLD = 0
 STARTING_LOCATION = [0,0]
@@ -10,13 +9,13 @@ class Player:
     def __init__(self, path_to_save=None):
         self.inventory = []
         #testing
-        for i in range(5):
-            self.inventory.append(get_random_item())
         self.max_hp = STARTING_MAX_hp
         self.hp = self.max_hp
-        self.gold = STARTING_GOLD
+        self.coin = STARTING_GOLD
         self.location = STARTING_LOCATION
         self.equipped = STARTING_EQIPPED_ITEM
+        for i in range(5):
+            self.add_item(get_random_item())
         # if (path_to_save):
         #     self.load_from_save(path_to_save)
 
@@ -35,7 +34,7 @@ class Player:
     
     def print_info(self):
         print(colored("hp",'green') + f': {self.hp}')
-        print(colored("gold",'yellow') + f': {self.gold}')
+        print(colored("coins",'yellow') + f': {self.coin}')
         print(colored("location",'blue') + f': {self.location}')
         print(f'{len(self.inventory)} item(s) in ' + colored("inventory",'cyan'))
     
@@ -63,6 +62,9 @@ class Player:
             self.inventory.pop(index)
     
     def add_item(self, item):
+        if (isinstance(item, CoinItem)):
+            self.coin += item.amount
+            return
         self.inventory.append(item)
     
     def refill_hp(self):
