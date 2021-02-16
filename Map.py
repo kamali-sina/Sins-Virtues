@@ -6,7 +6,8 @@ from random import random
 MAP_SIZE = 13
 DEFAULT_VALUES = [(DigableBlock,4, (0,0)),
                     (HomeBlock,2, (2,2)),
-                    (CastleBlock, 1, (5,5))]
+                    (CastleBlock, 1, (5,5)),
+                    (ShopBlock, 1, (3,3))]
 class Map:
     def __init__(self, path_to_save=None):
         self.map = []
