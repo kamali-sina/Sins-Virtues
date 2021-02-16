@@ -149,6 +149,7 @@ class CoinBag(CoinItem):
 ALL_ITEMS = [Shovel, Compass, Knife, Sword, CoinStack, CoinBag, Apple, Meat, Celery, Steroid]
 ITEM_TENSOR = []
 
+#TODO: use luck factor and make item generation better
 def make_item_tensor():
     for i in ALL_ITEMS:
         j = i()
