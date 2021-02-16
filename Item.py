@@ -1,7 +1,7 @@
 from random import random
 from termcolor import colored, cprint
 
-ALL_TAGS = ['utility', 'attack', 'hp', 'random']
+ALL_TAGS = ['utility', 'attack', 'hp', 'random', 'coin']
 
 class Item:
     def __init__(self):
@@ -11,6 +11,17 @@ class Item:
 
     def __str__(self):
         return self.name
+
+class CoinItem(Item):
+    def __init__(self):
+        self.MAX = 0
+        self.MIN = 0
+        self.name = 'coin'
+        self.tags = ['coin']
+        self.amount = int((self.MAX - self.MIN + 1) * random()) + self.MIN
+    
+    def __str__(self):
+        return colored(self.name, "yellow") + ' ---- amount: ' + str(self.amount)
 
 class UtilityItem(Item):
     def __init__(self):
@@ -71,7 +82,7 @@ class Steroid(UtilityItem):
 class Fist(AttackItem):
     def __init__(self):
         self.tags = ['attack']
-        self.rarity = 13
+        self.rarity = 999
         self.name = "fist"
         self.damage = 1
         self.speed = 6
@@ -106,7 +117,7 @@ class Celery(HpItem):
         self.rarity = 6
         self.tags = ["hp", 'random']
         self.name = "celery"
-        self.hp = 15
+        self.hp = 11
 
 class Meat(HpItem):
     def __init__(self):
@@ -117,7 +128,25 @@ class Meat(HpItem):
         self.speed = 1
         self.hp = 6
 
-ALL_ITEMS = [Shovel, Compass, Knife, Sword, Apple, Meat, Celery, Steroid]
+class CoinStack(CoinItem):
+    def __init__(self):
+        self.MAX = 1
+        self.MIN = 4
+        self.rarity = 5
+        self.name = 'coin_stack'
+        self.tags = ['coin', 'random']
+        self.amount = int((self.MAX - self.MIN + 1) * random()) + self.MIN
+
+class CoinBag(CoinItem):
+    def __init__(self):
+        self.MAX = 3
+        self.MIN = 8
+        self.rarity = 10
+        self.name = 'coin_stack'
+        self.tags = ['coin', 'random']
+        self.amount = int((self.MAX - self.MIN + 1) * random()) + self.MIN
+
+ALL_ITEMS = [Shovel, Compass, Knife, Sword, CoinStack, CoinBag, Apple, Meat, Celery, Steroid]
 ITEM_TENSOR = []
 
 def make_item_tensor():
