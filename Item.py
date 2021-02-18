@@ -114,7 +114,7 @@ class Apple(HpItem):
 
 class Celery(HpItem):
     def __init__(self):
-        self.rarity = 6
+        self.rarity = 7
         self.tags = ["hp", 'random']
         self.name = "celery"
         self.hp = 11
@@ -130,7 +130,7 @@ class Meat(HpItem):
 
 class CoinStack(CoinItem):
     def __init__(self):
-        self.MAX = 1
+        self.MAX = 2
         self.MIN = 4
         self.rarity = 5
         self.name = 'coin_stack'
