@@ -163,6 +163,9 @@ class HomeBlock(Block):
 
 class ShopBlock(Block):
     def __init__(self):
+        self.NAME = 0
+        self.PRICE = 1
+        self.MAKER = 2
         self.tags = ['random', 'special']
         self.rarity = 100
         self.name = "shop"
@@ -170,11 +173,33 @@ class ShopBlock(Block):
         self.stock = self.make_stock()
     
     def make_stock(self):
-        #TODO: complete, use rarity as a price indicator
-        print('todo')
+        ignored_tags = ['coin']
+        stock = [[],[],[]]
+        for item in Item.ALL_ITEMS:
+            temp = item()
+            if (self.check_tags(ignored_tags, temp)): continue
+            name = temp.name
+            stock[self.NAME].append(name)
+            rarity_multiplier = self.get_random_multiplier()
+            price = int(temp.rarity * rarity_multiplier)
+            stock[self.PRICE].append(price)
+            stock[self.MAKER].append(item)
+        return stock
+
+    def check_tags(self, ignored_tags, item):
+        result = False
+        for x in ignored_tags:
+            if (x in item.tags):
+                result = True
+                break
+        return result
+
+    def get_random_multiplier(self):
+        x = random() - 0.5
+        return 1 + (x * 0.4)
     
     def get_info(self):
-        return 'I can spend the coins I found here.'
+        return 'I can spend the coins I found here and sell my extra stuff.'
     
     def get_prompt(self):
         return 'Enter the shop?(y,n)'
@@ -184,8 +209,8 @@ class ShopBlock(Block):
         if (ans == 0):
             response = "I'll come back when I have more money"
         else:
-            #TODO: complete logic here
-            print('base')
+            #TODO: Complete this
+            game.enter_shop()
         return response
 
     def __str__(self):
