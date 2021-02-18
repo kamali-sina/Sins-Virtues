@@ -1,6 +1,6 @@
 from ConsoleHandler import slow, intro_cutscene, dialog, error
 import ConsoleHandler
-from Block import DigableBlock, NormalBlock
+from Block import DigableBlock, NormalBlock, ShopBlock
 import Block
 from termcolor import colored
 from Player import Player
@@ -41,6 +41,9 @@ class Game:
         elif (self.state == 'prompt'):
             self.current_commandset = self.PROMPT_COMMANDS
             self.current_commandset_handler = self.PROMPT_COMMANDS_HANDLER
+        elif (self.state == 'shop'):
+            self.current_commandset = self.SHOP_COMMANDS
+            self.current_commandset_handler = self.SHOP_COMMANDS_HANDLER
     
     def process_input(self, input_str):
         if (not self.validate_input(input_str)): return
@@ -97,8 +100,16 @@ class Game:
         self.player.print_inventory()
     
     def stock(self, dupped_str):
-        #TODO: complete
-        print('base')
+        block = self.map.get(self.player.location)
+        assert isinstance(block, ShopBlock), 'fuck'
+        print('\n==========Shop Stock==========')
+        print('  name                price')
+        print('------------------------------')
+        for i in range(len(block.stock[0])):
+            print(f' {block.stock[0][i]}', end="")
+            spaces = 21 - len(block.stock[0][i])
+            print(f'{" " * spaces}{block.stock[1][i]}')
+        print()
     
     def buy(self, dupped_str):
         #TODO: complete
@@ -109,8 +120,8 @@ class Game:
         print('base')
     
     def exit_shop(self, dupped_str):
-        #TODO: complete
-        print('base')
+        self.state = 'normal'
+        print('\nexiting shop...\n')
     
     def equip(self, dupped_str):
         if (len(dupped_str) < 2):
@@ -277,10 +288,11 @@ class Game:
         self.state = 'normal'
     
     def enter_shop(self):
-        print(colored('\n--Entered Shop--','red'))
+        print(colored('\n--Entered Shop--','yellow'))
         self.state = 'shop'
-        while(True):
+        while(self.state == 'shop'):
+            self.set_command_set()
             input_str = input(colored("> ",'yellow')).strip().lower()
             self.process_input(input_str)
             #TODO: Think about exit
-        self.state = 'normal'
+        self.set_command_set()
