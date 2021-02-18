@@ -15,6 +15,8 @@ class Game:
         self.FIGHT_COMMANDS_HANDLER = [self.inventory, self.info, self.use, self.attack, self.commands, self.equip]
         self.PROMPT_COMMANDS = ['yes', 'no', 'y', 'n']
         self.PROMPT_COMMANDS_HANDLER = [self.prompt_handler, self.prompt_handler, self.prompt_handler, self.prompt_handler]
+        self.SHOP_COMMANDS = ['inventory', 'info', 'commands', 'stock', 'buy', 'sell', 'exit']
+        self.SHOP_COMMANDS_HANDLER = [self.inventory, self.info, self.commands, self.stock, self.buy, self.sell, self.exit_shop]
         self.my_time = float(0)
         self.enemy_time = float(0)
         intro_cutscene()
@@ -93,6 +95,22 @@ class Game:
             return
         self.my_time += 0.5
         self.player.print_inventory()
+    
+    def stock(self, dupped_str):
+        #TODO: complete
+        print('base')
+    
+    def buy(self, dupped_str):
+        #TODO: complete
+        print('base')
+    
+    def sell(self, dupped_str):
+        #TODO: complete
+        print('base')
+    
+    def exit_shop(self, dupped_str):
+        #TODO: complete
+        print('base')
     
     def equip(self, dupped_str):
         if (len(dupped_str) < 2):
@@ -256,4 +274,13 @@ class Game:
             elif(self.enemy.hp <= 0):
                 print(f'the {colored(self.enemy.name, "red")} is dead.')
                 break
+        self.state = 'normal'
+    
+    def enter_shop(self):
+        print(colored('\n--Entered Shop--','red'))
+        self.state = 'shop'
+        while(True):
+            input_str = input(colored("> ",'yellow')).strip().lower()
+            self.process_input(input_str)
+            #TODO: Think about exit
         self.state = 'normal'
