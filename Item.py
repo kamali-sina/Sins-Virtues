@@ -12,6 +12,12 @@ class Item:
     def __str__(self):
         return self.name
 
+    def get_sell_price(self):
+        MAX = 0.80
+        MIN = 0.60
+        price_multiplier = int((MAX - MIN) * random()) + MIN
+        return int(self.rarity * price_multiplier)
+
 class CoinItem(Item):
     def __init__(self):
         self.MAX = 0
@@ -32,6 +38,12 @@ class UtilityItem(Item):
     
     def __str__(self):
         return colored(self.name, "blue") + ' ---- uses remaining: ' + str(self.uses)
+    
+    def get_sell_price(self):
+        MAX = 0.80
+        MIN = 0.60
+        price_multiplier = int((MAX - MIN + 1) * random()) + MIN
+        return int(self.rarity * price_multiplier * (self.uses / self.INITIAL_USES))
 
 class HpItem(Item):
     def __init__(self):
@@ -73,7 +85,7 @@ class Compass(UtilityItem):
 
 class Steroid(UtilityItem):
     def __init__(self):
-        self.rarity = 11
+        self.rarity = 12
         self.INITIAL_USES = 1
         self.tags = ["utility", 'random']
         self.name = "steroid"
