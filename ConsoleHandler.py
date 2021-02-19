@@ -74,6 +74,12 @@ def out_of_bounds_dialog():
 def dont_have_items_dialog():
     dialog('You', "I do not have that item!", 'yellow', speed=18)
 
+def item_not_in_stock_dialog():
+    dialog('Shopkeeper', "I do not have that item in stock!", 'green', speed=18)
+
+def not_enough_coins_dialog():
+    dialog('Shopkeeper', "You do not have enough coins to buy that!", 'green', speed=18)
+
 def cant_use_item_dialog():
     dialog('You', "I can't use that item!", 'yellow', speed=17)
 
