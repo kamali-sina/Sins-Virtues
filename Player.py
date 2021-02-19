@@ -77,3 +77,9 @@ class Player:
         STEROID_ADD = 5
         self.max_hp += STEROID_ADD
         self.hp = self.max_hp
+    
+    def sell(self, index):
+        price = self.inventory[index].get_sell_price()
+        self.coin += price
+        self.inventory.pop(index)
+        return price
