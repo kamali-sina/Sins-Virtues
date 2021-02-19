@@ -5,7 +5,7 @@ import Block
 from termcolor import colored
 from Player import Player
 from Map import Map
-#TODO: add shop blocks and gold
+#TODO: FIX the \n in all prints from the get go and remove the shitty ones ffs
 
 class Game:
     def __init__(self,path_to_savefiles=None, newgame=True):
@@ -19,7 +19,7 @@ class Game:
         self.SHOP_COMMANDS_HANDLER = [self.inventory, self.info, self.commands, self.stock, self.buy, self.sell, self.exit_shop]
         self.my_time = float(0)
         self.enemy_time = float(0)
-        intro_cutscene()
+        # intro_cutscene()
         self.player = Player(path_to_savefiles)
         self.map = Map(path_to_savefiles)
 
@@ -107,17 +107,38 @@ class Game:
         print('------------------------------')
         for i in range(len(block.stock[0])):
             print(f' {block.stock[0][i]}', end="")
-            spaces = 21 - len(block.stock[0][i])
-            print(f'{" " * spaces}{block.stock[1][i]}')
+            spaces = 21 - len(block.stock[block.NAME][i])
+            print(f'{" " * spaces}{colored(block.stock[block.PRICE][i],"yellow")}')
         print()
     
     def buy(self, dupped_str):
-        #TODO: complete
-        print('base')
+        if (len(dupped_str) < 2):
+            self.unknown_command_dialog()
+            return
+        block = self.map.get(self.player.location)
+        assert isinstance(block, ShopBlock), 'fuck'
+        index = block.index_item(dupped_str[1])
+        if (index == -1):
+            ConsoleHandler.item_not_in_stock_dialog()
+            return
+        price = block.stock[block.PRICE][index]
+        if (self.player.coin < price):
+            ConsoleHandler.not_enough_coins_dialog()
+            return
+        item = block.buy_item(index)
+        self.player.coin -= price
+        self.player.add_item(item)
+        print(f'buyed {dupped_str[1]} for {price} coins')
     
     def sell(self, dupped_str):
-        #TODO: complete
-        print('base')
+        if (len(dupped_str) < 2):
+            self.unknown_command_dialog()
+            return
+        index = self.player.index_item(dupped_str[1])
+        if (index == -1):
+            ConsoleHandler.dont_have_items_dialog()
+            return
+        print(f'\n{dupped_str[1]} sold for {colored(self.player.sell(index),"yellow")}\n')
     
     def exit_shop(self, dupped_str):
         self.state = 'normal'
@@ -294,5 +315,4 @@ class Game:
             self.set_command_set()
             input_str = input(colored("> ",'yellow')).strip().lower()
             self.process_input(input_str)
-            #TODO: Think about exit
         self.set_command_set()
