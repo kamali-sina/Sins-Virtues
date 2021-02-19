@@ -194,6 +194,17 @@ class ShopBlock(Block):
                 break
         return result
 
+    def index_item(self, item_name):
+        for i in range(len(self.stock[self.NAME])):
+            if (self.stock[self.NAME][i] == item_name):
+                return i
+        return -1
+    
+    def buy_item(self, index):
+        self.stock[self.NAME].pop(index)
+        self.stock[self.PRICE].pop(index)
+        return self.stock[self.MAKER].pop(index)()
+
     def get_random_multiplier(self):
         x = random() - 0.5
         return 1 + (x * 0.4)
@@ -209,7 +220,7 @@ class ShopBlock(Block):
         if (ans == 0):
             response = "I'll come back when I have more money"
         else:
-            #TODO: Complete this
+            #TODO: shop keeper dialogs here
             game.enter_shop()
         return response
 
