@@ -27,10 +27,8 @@ class Player:
         self.location[1] += tup[1]
     
     def print_inventory(self):
-        print()
         for item in self.inventory:
             print(item)
-        print()
     
     def print_info(self):
         print(colored("hp",'green') + f': {self.hp}')
@@ -48,12 +46,10 @@ class Player:
         assert isinstance(self.inventory[index], HpItem), 'trying to heal with not hp item'
         item = self.inventory.pop(index)
         self.hp = min(10, self.hp + item.hp)
-        print()
         if (self.hp == self.max_hp):
             print(colored("hp",'green') + ' is now full at ' + str(self.hp))
         else:
             print(colored("hp",'green') + ' is now ' + str(self.hp))
-        print()
     
     def use_utility(self, index):
         item = self.inventory[index]
