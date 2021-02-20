@@ -46,7 +46,9 @@ def slow(text, speed=13):
     poller = KeyboardPoller()
     poller.start()
     for i in range(len(text)):
-        print(text[i], end="")
+        #TODO: check this
+        if (text[i] == '\n'): print()
+        else: print(text[i], end="")
         if (data_ready.isSet()):
             data_ready.clear()
             poller.join()
@@ -79,6 +81,9 @@ def item_not_in_stock_dialog():
 
 def not_enough_coins_dialog():
     dialog('Shopkeeper', "You do not have enough coins to buy that!", 'green', speed=18)
+
+def welcome_to_shop_dialog():
+    dialog('Shopkeeper', "Welcome stranger! Whatever you want, I got it.", 'green', speed=18)
 
 def cant_use_item_dialog():
     dialog('You', "I can't use that item!", 'yellow', speed=17)
