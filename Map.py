@@ -122,3 +122,15 @@ class Map:
                 indexes = self.tup_to_index(l)
                 if (not(i == 0 and j == 0)): x.add(type(self.map[indexes[0]][indexes[1]]))
         return x
+    
+    def get_adjacent_dialogs(self, tup):
+        x = set()
+        for i in [-1,0,1]:
+            for j in [-1,0,1]:
+                l = (tup[0] + i, tup[1] + j)
+                if (not self.is_location_valid(l)): continue
+                indexes = self.tup_to_index(l)
+                block = self.map[indexes[0]][indexes[1]]
+                if (not block.has_adjacent_dialog): continue
+                if (not(i == 0 and j == 0)): x.add(self.map[indexes[0]][indexes[1]].get_adjacent_dialog())
+        return x
