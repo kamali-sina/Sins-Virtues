@@ -5,7 +5,6 @@ import Block
 from termcolor import colored
 from Player import Player
 from Map import Map
-#TODO: FIX the \n in all prints from the get go and remove the shitty ones ffs
 
 class Game:
     def __init__(self,path_to_savefiles=None, newgame=True):
@@ -47,10 +46,12 @@ class Game:
     
     def process_input(self, input_str):
         if (not self.validate_input(input_str)): return
+        print()
         dupped_str = input_str.split()
         command = dupped_str[0]
         index = self.current_commandset.index(command)
         self.current_commandset_handler[index](dupped_str)
+        print()
     
     def validate_input(self, input_str):
         dupped_str = input_str.split()
@@ -65,12 +66,10 @@ class Game:
     
     def unknown_command_dialog(self):
         self.idiot_counter += 1
-        print()
         if (self.idiot_counter > 2):
             dialog('You', "I am bec oming bo bo idiot m an! maybe I should study the to turial?", 'yellow', speed=12)
             return
         dialog('You', "I do not know how to do that!", 'yellow', speed=15)
-        print()
         return
     
     def move(self, dupped_str):
@@ -102,14 +101,13 @@ class Game:
     def stock(self, dupped_str):
         block = self.map.get(self.player.location)
         assert isinstance(block, ShopBlock), 'fuck'
-        print('\n==========Shop Stock==========')
+        print('==========Shop Stock==========')
         print('  name                price')
         print('------------------------------')
         for i in range(len(block.stock[0])):
             print(f' {block.stock[0][i]}', end="")
             spaces = 21 - len(block.stock[block.NAME][i])
             print(f'{" " * spaces}{colored(block.stock[block.PRICE][i],"yellow")}')
-        print()
     
     def buy(self, dupped_str):
         if (len(dupped_str) < 2):
@@ -138,11 +136,11 @@ class Game:
         if (index == -1):
             ConsoleHandler.dont_have_items_dialog()
             return
-        print(f'\n{dupped_str[1]} sold for {colored(self.player.sell(index),"yellow")}\n')
+        print(f'{dupped_str[1]} sold for {colored(self.player.sell(index),"yellow")}')
     
     def exit_shop(self, dupped_str):
         self.state = 'normal'
-        print('\nexiting shop...\n')
+        print('exiting shop...')
     
     def equip(self, dupped_str):
         if (len(dupped_str) < 2):
@@ -155,7 +153,7 @@ class Game:
         if('attack' in self.player.inventory[index].tags):
             self.my_time += 1.5
             self.player.equip_item(self.player.inventory[index])
-            print(f'\nequipped item is now {colored(self.player.equipped,"red")}\n')
+            print(f'equipped item is now {colored(self.player.equipped,"red")}')
         else:
             ConsoleHandler.cant_attack_with_item_dialog()
 
@@ -187,12 +185,10 @@ class Game:
         if (len(dupped_str) != 1):
             self.unknown_command_dialog()
             return
-        print()
         self.player.print_info()
         block = self.map.get(self.player.location)
         if (self.state == 'normal'): print(f'current block is {colored(block.name,"magenta")}')
         elif (self.state == 'fight'): print(f'enemy has {colored(self.enemy.hp,"red")} hp left')
-        print()
     
     def attack(self, dupped_str):
         # if (len(dupped_str) != 1):
@@ -206,10 +202,9 @@ class Game:
         if (len(dupped_str) != 1):
             self.unknown_command_dialog()
             return
-        print('\nAvailable commands:')
+        print('Available commands:')
         for x in self.current_commandset:
             print(f'                  {colored("-", "cyan")}{x}')
-        print()
     
     def pmap(self, dupped_str):
         self.map.print_map(self.player.location)
@@ -221,21 +216,17 @@ class Game:
         ans = 0
         if (dupped_str[0] in ['yes', 'y']):
             ans = 1
-        print()
         response = self.map.get(self.player.location).prompt_handler(ans, self)
-        print(response)
-        print()
+        if (response != ''): print(response)
         self.state = 'normal'
     
     def use_compass(self, inventory_index):
-        print()
         print(self.map.compass(self.player.location))
-        print()
     
     def use_steroid(self, inventory_index):
         self.player.use_utility(inventory_index)
         self.player.use_steroid(inventory_index)
-        print(f'\nmax hp is now {colored(self.player.max_hp, "red")}\n')
+        print(f'max hp is now {colored(self.player.max_hp, "red")}')
 
     def dig_here(self, inventory_index):
         block = self.map.get(self.player.location)
@@ -243,7 +234,6 @@ class Game:
             ConsoleHandler.cant_dig_here_dialog()
             return
         self.player.use_utility(inventory_index)
-        print()
         if (block.contains_item):
             block.contains_item = False
             item = block.item_inside
@@ -251,40 +241,34 @@ class Game:
             self.player.add_item(item)
         else:
             ConsoleHandler.didnt_find_item_dialog()
-        print()
     
     def new_block_dialog(self):
         current_block = self.map.get(self.player.location)
         adjacent_dialog = self.adjacent_dialogs().strip()
-        print()
         ConsoleHandler.new_block_reached_dialog(current_block)
         if (len(adjacent_dialog) > 0):
             dialog("You",adjacent_dialog, "yellow", speed=30)
         if (current_block.has_special_prompt):
             slow(current_block.get_prompt() + '\n')
             self.state = 'prompt'
-        print()
     
     def adjacent_dialogs(self):
         #FIXME: complete mojaver blocks add chest containing block
         blocks = [Block.HomeBlock]
         blocks_dialog = ['I can see a faint light emitting nearby...']
         full_dialog = ''
-        s = self.map.get_adjacent_blocks(self.player.location)
+        s = self.map.get_adjacent_dialogs(self.player.location)
         for item in s:
-            try:
-                index = blocks.index(item)
-                full_dialog += blocks_dialog[index] + '\n'
-            except:
-                continue
+            full_dialog += item + '\n'
+        full_dialog.strip()
         return full_dialog
     
     def enemy_attack(self):
         self.player.hp -= self.enemy.damage
-        print(f'\n{self.enemy.name} attacks you for {colored(str(self.enemy.damage), "red")} damage!\n')
+        print(f'{self.enemy.name} attacks you for {colored(str(self.enemy.damage), "red")} damage!')
     
     def fight_enemy(self, enemy):
-        print(colored('\n--Entered Battle--','red'))
+        print(colored('--Entered Battle--','red'))
         print('enemy info:\n' + str(enemy) + '\n')
         self.state = 'fight'
         self.set_command_set()
@@ -309,7 +293,8 @@ class Game:
         self.state = 'normal'
     
     def enter_shop(self):
-        print(colored('\n--Entered Shop--','yellow'))
+        print(colored('--Entered Shop--\n','yellow'))
+        ConsoleHandler.welcome_to_shop_dialog()
         self.state = 'shop'
         while(self.state == 'shop'):
             self.set_command_set()
