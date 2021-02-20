@@ -11,6 +11,7 @@ class Block:
         self.tags = []
         self.rarity = 1
         self.has_special_prompt = False
+        self.has_adjacent_dialog = False
     
     def get_info(self):
         return 'default block'
@@ -28,6 +29,7 @@ class CastleBlock(Block):
         self.enemies = []
         self.boss = None
         self.has_special_prompt = True
+        self.has_adjacent_dialog = False
         self.tags = ['special']
         self.init_enemies()
     
@@ -69,6 +71,7 @@ class DigableBlock(Block):
         self.tags = ['random', 'special', 'loot']
         self.name = "digable"
         self.has_special_prompt = False
+        self.has_adjacent_dialog = False
         self.rarity = 10
         self.contains_item = random() < self.ITEM_CHANCE
         if (self.contains_item):
@@ -89,6 +92,7 @@ class NormalBlock(Block):
         self.name = "normal"
         self.contains_item = random() < self.ITEM_CHANCE
         self.has_special_prompt = self.contains_item
+        self.has_adjacent_dialog = self.contains_item
         if (self.contains_item):
             self.item_inside = Item.get_random_item(luck_factor=0)
 
@@ -97,6 +101,9 @@ class NormalBlock(Block):
             return 'Wow there is a chest here!'
         else:
             return 'nothing special here.'
+    
+    def get_adjacent_dialog(self):
+        return 'I can see a chest over there on the ground!'
     
     def get_prompt(self):
         return 'Open the chest?(y,n)'
@@ -124,6 +131,7 @@ class HomeBlock(Block):
         self.tags = ['random', 'special']
         self.rarity = 80
         self.name = "home"
+        self.has_adjacent_dialog = True
         self.has_special_prompt = True
         self.contains_item = True
         self.contains_enemy = random() < self.ENEMY_CHANCE
@@ -133,6 +141,9 @@ class HomeBlock(Block):
 
     def get_info(self):
         return 'This looks like a place to rest.'
+    
+    def get_adjacent_dialog(self):
+        return 'I can see a faint light emitting nearby...'
     
     def get_prompt(self):
         return 'Enter the home?(y,n)'
@@ -170,7 +181,11 @@ class ShopBlock(Block):
         self.rarity = 100
         self.name = "shop"
         self.has_special_prompt = True
+        self.has_adjacent_dialog = True
         self.stock = self.make_stock()
+    
+    def get_adjacent_dialog(self):
+        return 'I can see a shop nearby.'
     
     def make_stock(self):
         ignored_tags = ['coin']
@@ -220,7 +235,6 @@ class ShopBlock(Block):
         if (ans == 0):
             response = "I'll come back when I have more money"
         else:
-            #TODO: shop keeper dialogs here
             game.enter_shop()
         return response
 
