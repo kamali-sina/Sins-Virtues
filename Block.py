@@ -114,6 +114,7 @@ class NormalBlock(Block):
         else:
             self.contains_item = False
             self.has_special_prompt = False
+            self.has_adjacent_dialog = False
             game.player.add_item(self.item_inside)
             response = f'Found a {self.item_inside.name} in the chest!'
         return response
