@@ -1,6 +1,6 @@
 import sys
 import os
-from ConsoleHandler import error,help_if_needed, NEWGAME, LOADGAME
+from ConsoleHandler import error,help_if_needed, toturial_if_needed, NEWGAME, LOADGAME
 from Game import Game
 
 if __name__ == "__main__":
@@ -8,6 +8,7 @@ if __name__ == "__main__":
         error('no arguments were provided.\n\nif you need help use -h or --help')
         exit()
     help_if_needed(sys.argv[1])
+    toturial_if_needed(sys.argv[1])
     path = './'
     if (len(sys.argv) > 2):
         path = sys.argv[2]
