@@ -191,9 +191,6 @@ class Game:
         elif (self.state == 'fight'): print(f'enemy has {colored(self.enemy.hp,"red")} hp left')
     
     def attack(self, dupped_str):
-        # if (len(dupped_str) != 1):
-        #     self.unknown_command_dialog()
-        #     return
         self.enemy.get_damaged(self.player.equipped.damage)
         self.my_time += self.enemy.speed
         print(f'attacked {colored(self.enemy.name, "magenta")} for {colored(self.player.equipped.damage,"red")} damage!')
@@ -244,24 +241,16 @@ class Game:
     
     def new_block_dialog(self):
         current_block = self.map.get(self.player.location)
-        adjacent_dialog = self.adjacent_dialogs().strip()
         ConsoleHandler.new_block_reached_dialog(current_block)
-        if (len(adjacent_dialog) > 0):
-            dialog("You",adjacent_dialog, "yellow", speed=30)
+        self.print_adjacent_dialogs()
         if (current_block.has_special_prompt):
             slow(current_block.get_prompt() + '\n')
             self.state = 'prompt'
     
-    def adjacent_dialogs(self):
-        #FIXME: complete mojaver blocks add chest containing block
-        blocks = [Block.HomeBlock]
-        blocks_dialog = ['I can see a faint light emitting nearby...']
-        full_dialog = ''
+    def print_adjacent_dialogs(self):
         s = self.map.get_adjacent_dialogs(self.player.location)
         for item in s:
-            full_dialog += item + '\n'
-        full_dialog.strip()
-        return full_dialog
+            dialog("You",item, "yellow", speed=30)
     
     def enemy_attack(self):
         self.player.hp -= self.enemy.damage
