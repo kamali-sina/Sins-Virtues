@@ -5,7 +5,6 @@ import os
 import threading
 import pyautogui
 import getch
-# from _Getch import getch
 
 data_ready = threading.Event()
 
@@ -18,7 +17,6 @@ class KeyboardPoller( threading.Thread ) :
 HELPS = ['-h', '--help']
 NEWGAME = '-n'
 LOADGAME = '-s'
-#TODO: make toturial
 TOTURIALS = ['-t', '--toturial']
 
 def error(string):
@@ -33,12 +31,45 @@ def dialog(name ,text, color, speed=13):
 def help_if_needed(string):
     if (string in HELPS):
         print('Usage: Python3 VnS.py <options>\n')
-        cprint('welcome to Sins & Virtues!\n', 'green')
+        cprint('=== welcome to Sins & Virtues! ===\n', 'green')
         print('use the following options to play the game:\n')
         new = colored(f'"{NEWGAME}"','yellow')
         load = colored(f'"{LOADGAME}"','yellow')
+        toturial = colored(f'"{TOTURIALS[0]}"','yellow')
+        helps = colored(f'"{HELPS[0]}"','yellow')
         print(f'  {new}: for starting a new game. \n    can be followed by the path to save the game. saves in the current directory as default\n')
-        print(f'  {load}: for resuming from a save file.\n    must be followed by the path to the save directory')
+        # print(f'  {load}: for resuming from a save file.\n    must be followed by the path to the save directory')
+        print(f'  {load}: does not do anything currently.\n')
+        print(f'  {toturial}: for learning the game. \n')
+        print(f'  {helps}: for seeing the page you are reading now. \n')
+        exit()
+
+def toturial_if_needed(string):
+    if (string in TOTURIALS):
+        cprint('\n=== welcome to Sins & Virtues! ===\n', 'blue')
+        print('This game is completely text based. There are no maps(yet), no hint, no eagle vision, no nothing.')
+        print('But that does not mean that you are completely blind! The protagonist constantly talks about his surroundings, everything he says is there for a reason, so don\'t skip all the dialogs!')
+        cprint('\n===HOW TO PLAY THE GAME===\n', 'green')
+        print('Everytime you see a little ">" on the screen it\'s your turn to play the game. You have a handful of commands that you can use in every situation that you can see by typing "commands".')
+        print('Each of the commands that you can use do use some time, this becomes important specially in the fights where losing time could mean death.')
+        print('We suggest testing and exploring the commnads by yourself, but if you want more info on some commands you can:')
+        print('\tGo to our github page and read the complete readme: https://github.com/PapaSinku/Sins-Virtues')
+        cprint('\n===Shops===\n', 'yellow')
+        print('There are some shops located in the game that you can use to sell your unwanted items and buy the things you want. The currencies in this game are "coins".')
+        print('Not all shopkeepers are the same, some have higher prices, some buy your items at a higher price. explore and find the shopkeeper that suits you the best.')
+        cprint('\n===Homes===\n', 'green')
+        print('Homes can be used to rest the night and restore your hp. It also usualy contains a good item inside.')
+        print('But not all homes are empty. Enter with caution.')
+        cprint('\n===Fights===\n', 'red')
+        print('Fights in this game are text based. The only command for attacking that you have is "attack" that uses the equipped item to attack the enemy.')
+        print('Each move you or your enemy make in a fight uses some time, the turnes in the fight are calculated by using that time.')
+        print('always make sure to have equipped your best weapon before exploring into the unknown. You never know when the next enemy is going to fight you and that extra "equip" might be what saves or kills you in the end.')
+        cprint('\n===Castle===', 'magenta')
+        print('To finish the game, you need to find the castle and explore it completely to the end. You have 2 options to find the castle:')
+        print('\texplore blindly untill you come across the castle block')
+        print('\tfind a compass. by using a compass the compass directs you to the castle location.')
+        cprint('*Always go into the castle prepared. The enemies in there will kill you easily if you are not well prepared.*','red')
+        print('\n\n===============\nHappy Exploring, goodnight!')
         exit()
 
 def slow(text, speed=13):
@@ -46,9 +77,10 @@ def slow(text, speed=13):
     poller = KeyboardPoller()
     poller.start()
     for i in range(len(text)):
-        #TODO: check this
-        if (text[i] == '\n'): print()
-        else: print(text[i], end="")
+        if (text[i] == '\n'): 
+            print()
+        else: 
+            print(text[i], end="")
         if (data_ready.isSet()):
             data_ready.clear()
             poller.join()
