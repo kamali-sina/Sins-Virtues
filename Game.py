@@ -3,6 +3,7 @@ import ConsoleHandler
 from Block import DigableBlock, NormalBlock, ShopBlock
 import Block
 from termcolor import colored
+from time import sleep
 from Player import Player
 from Map import Map
 
@@ -18,7 +19,7 @@ class Game:
         self.SHOP_COMMANDS_HANDLER = [self.inventory, self.info, self.commands, self.stock, self.buy, self.sell, self.exit_shop]
         self.my_time = float(0)
         self.enemy_time = float(0)
-        # intro_cutscene()
+        intro_cutscene()
         self.player = Player(path_to_savefiles)
         self.map = Map(path_to_savefiles)
 
@@ -199,9 +200,11 @@ class Game:
         if (len(dupped_str) != 1):
             self.unknown_command_dialog()
             return
+        exclude = ['map']
         print('Available commands:')
         for x in self.current_commandset:
-            print(f'                  {colored("-", "cyan")}{x}')
+            if (x not in exclude):
+                print(f'                  {colored("-", "cyan")}{x}')
     
     def pmap(self, dupped_str):
         self.map.print_map(self.player.location)
@@ -238,6 +241,7 @@ class Game:
             self.player.add_item(item)
         else:
             ConsoleHandler.didnt_find_item_dialog()
+        self.map.set(self.player.location, NormalBlock(no_chest=True))
     
     def new_block_dialog(self):
         current_block = self.map.get(self.player.location)
@@ -257,8 +261,10 @@ class Game:
         print(f'{self.enemy.name} attacks you for {colored(str(self.enemy.damage), "red")} damage!')
     
     def fight_enemy(self, enemy):
-        print(colored('--Entered Battle--','red'))
+        print(colored('\n--Entered Battle--\n','red'))
+        sleep(0.7)
         print('enemy info:\n' + str(enemy) + '\n')
+        sleep(0.6)
         self.state = 'fight'
         self.set_command_set()
         self.enemy = enemy
@@ -271,6 +277,8 @@ class Game:
                 self.enemy_time += self.player.equipped.speed
             else:
                 #our turn to attack
+                print(colored("Your hp",'green') + f': {self.player.hp}')
+                print(colored("Enemy's hp",'red') + f': {self.enemy.hp}\n')
                 input_str = input(colored("> ",'red')).strip().lower()
                 self.process_input(input_str)
             if (self.player.hp <= 0):
@@ -278,6 +286,8 @@ class Game:
                 exit()
             elif(self.enemy.hp <= 0):
                 print(f'the {colored(self.enemy.name, "red")} is dead.')
+                dialog("You", self.enemy.get_kill_dialog(), "yellow", speed=18)
+                self.player.coin += self.enemy.bounty
                 break
         self.state = 'normal'
     
