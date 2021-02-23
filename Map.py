@@ -97,6 +97,10 @@ class Map:
     def get(self, tup):
         indexes = self.tup_to_index(tup)
         return self.map[indexes[0]][indexes[1]]
+    
+    def set(self, tup, block):
+        indexes = self.tup_to_index(tup)
+        self.map[indexes[0]][indexes[1]] = block
 
     def compass(self, tup):
         vector = (self.castle_location[0] - tup[0], self.castle_location[1] - tup[1])
