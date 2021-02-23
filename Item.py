@@ -102,7 +102,7 @@ class Fist(AttackItem):
 class Knife(AttackItem):
     def __init__(self):
         self.INITIAL_USES = 6
-        self.rarity = 5
+        self.rarity = 7
         self.tags = ["utility", 'attack', 'random']
         self.name = "knife"
         self.uses = self.INITIAL_USES
