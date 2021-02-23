@@ -9,11 +9,15 @@ class Enemy:
     def __init__(self):
         self.name = ""
         self.hp = 0
+        self.bounty = 0
         self.speed = 0
         self.damage = 0
 
     def get_damaged(self, damage):
         self.hp -= damage
+    
+    def get_kill_dialog(self):
+        return f"Found {colored(self.bounty,'yellow')} coin(s) on the {self.name}"
     
     def __str__(self):
         return f"name: {self.name} - hp: {self.hp} - speed: {self.speed} - damage: {self.damage}"
@@ -33,6 +37,7 @@ class Guy(Enemy):
     def __init__(self):
         self.name = "guy"
         self.hp = 1
+        self.bounty = 1
         self.speed = 1
         self.damage = 2
 
@@ -41,13 +46,18 @@ class Wolf(Enemy):
     def __init__(self):
         self.name = "wolf"
         self.hp = 4
+        self.bounty = 2
         self.damage = 3
         self.speed = 7
+    
+    def get_kill_dialog(self):
+        return f"Found {colored(self.bounty,'yellow')} coin(s) on the wolf, how does a wolf have money?"
 
 class BigBob(Enemy):
     def __init__(self):
         self.name = "big bob"
         self.hp = 12
+        self.bounty = 2
         self.damage = 6
         self.speed = 3
 
@@ -55,6 +65,7 @@ class BloatedBoss(Boss):
     def __init__(self):
         self.name = "bloated"
         self.hp = 20
+        self.bounty = 20
         self.healing = 1
         self.damage = 7
         self.speed = 4
@@ -71,6 +82,9 @@ class BloatedBoss(Boss):
     
     def intro_dialog(self):
         dialog(self.name, "Acid goes brrrrrrr...", "red")
+    
+    def get_kill_dialog(self):
+        return f"Acid does no go brrrrrrrr anymore..."
 
 normal_enemys = [Guy, Wolf, BigBob]
 endgame_bosses = [BloatedBoss]
