@@ -67,7 +67,7 @@ class CastleBlock(Block):
 
 class DigableBlock(Block):
     def __init__(self):
-        self.ITEM_CHANCE = 0.4
+        self.ITEM_CHANCE = 0.9
         self.tags = ['random', 'special', 'loot']
         self.name = "digable"
         self.has_special_prompt = False
@@ -85,12 +85,15 @@ class DigableBlock(Block):
 
 
 class NormalBlock(Block):
-    def __init__(self):
+    def __init__(self, no_chest=False):
         self.ITEM_CHANCE = 0.04
         self.tags = ['random', 'loot']
         self.rarity = 1
         self.name = "normal"
-        self.contains_item = random() < self.ITEM_CHANCE
+        if (no_chest):
+            self.contains_item = False
+        else:
+            self.contains_item = random() < self.ITEM_CHANCE
         self.has_special_prompt = self.contains_item
         self.has_adjacent_dialog = self.contains_item
         if (self.contains_item):
@@ -155,7 +158,7 @@ class HomeBlock(Block):
             response = 'Good idea, there might be people in there'
         else:
             if self.contains_enemy:
-                print(f'there is a {colored(self.enemy.name,"red")} here, I have to fight it!')
+                ConsoleHandler.dialog("You", f'there is a {colored(self.enemy.name,"red")} here, I have to fight it!', "yellow", speed=20)
                 game.fight_enemy(self.enemy)
                 self.contains_enemy = False
                 print('now I can rest here')
