@@ -3,6 +3,7 @@ from termcolor import colored
 from time import sleep
 import sys
 from ConsoleHandler import dialog
+from sys import exit
 
 #TODO: add poison damage
 class Enemy:

@@ -1,12 +1,12 @@
 # Sins-Virtues
 ## **welcome to Sins & Virtues Toturial**
 
-This game is completely text based. There are **no** maps(yet), **no** hint, **no** eagle vision, **no** nothing.
+This game is completely text based. There are **no** maps(yet), **no** hints, **no** eagle vision, **no** nothing.
 But that does not mean that you are completely blind! The protagonist constantly talks about his surroundings, everything he says is there for a reason, so don't skip all the dialogs!
 
 ## HOW TO PLAY THE GAME
 
-Everytime you see a little **>** on the screen it's your turn to play the game. You have a handful of commands that you can use in every situation that you can see by typing *commands*.
+Everytime you see a little **>** on the screen it's your turn to play the game. You have a handful of commands that you can use in every situation that you can review by typing *commands*.
 
 Each of the commands that you can use do use some time, this becomes important specially in the fights where losing time could mean death.
 
@@ -20,16 +20,16 @@ Not all shopkeepers are the same, some have higher prices, some buy your items a
 
 ## Homes
 
-Homes can be used to rest the night and restore your hp. It also usualy contains a good item inside.
+Homes can be used to rest the night and restore your hp. They also usualy contains a good item inside.
 But not all homes are empty. Enter with **caution**.
 
 ## Fights
 
-Fights in this game are text based. The only command for attacking that you have is "attack" that uses the equipped item to attack the enemy.
+Fights in this game are text based also. The only command for attacking that you have is "attack" that uses the equipped item to attack the enemy.
 
-Each move you or your enemy make in a fight uses some time, the turnes in the fight are calculated by using that time.
+Each move you or your enemy make in a fight uses some time, the turns in the fights are calculated by using that time.
 
-**always** make sure to have equipped your best weapon before exploring into the unknown. You never know when the next enemy is going to fight you and that extra *equip* might be what saves or kills you in the end.
+**Always** make sure to have equipped your best weapon before exploring into the unknown. You never know when the next enemy is going to fight you and that extra *equip* might be what saves or kills you in the end.
 
 ## **Castle**
 To finish the game, you need to find the castle and explore it completely to the end. You have 2 options to find the castle:

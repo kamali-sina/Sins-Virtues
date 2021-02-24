@@ -1,5 +1,6 @@
 from random import random
 from termcolor import colored, cprint
+from sys import exit
 
 ALL_TAGS = ['utility', 'attack', 'hp', 'random', 'coin']
 

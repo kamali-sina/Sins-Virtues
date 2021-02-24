@@ -1,6 +1,7 @@
 from Block import *
 from termcolor import colored
 from random import random
+from sys import exit
 
 
 MAP_SIZE = 13

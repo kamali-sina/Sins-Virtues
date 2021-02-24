@@ -3,8 +3,10 @@ import sys
 from time import sleep
 import os
 import threading
-import pyautogui
+# import pyautogui
+from random import random
 import getch
+from sys import exit
 
 data_ready = threading.Event()
 
@@ -47,10 +49,10 @@ def help_if_needed(string):
 def toturial_if_needed(string):
     if (string in TOTURIALS):
         cprint('\n=== welcome to Sins & Virtues! ===\n', 'blue')
-        print('This game is completely text based. There are no maps(yet), no hint, no eagle vision, no nothing.')
+        print('This game is completely text based. There are no maps(yet), no hints, no eagle vision, no nothing.')
         print('But that does not mean that you are completely blind! The protagonist constantly talks about his surroundings, everything he says is there for a reason, so don\'t skip all the dialogs!')
         cprint('\n===HOW TO PLAY THE GAME===\n', 'green')
-        print('Everytime you see a little ">" on the screen it\'s your turn to play the game. You have a handful of commands that you can use in every situation that you can see by typing "commands".')
+        print('Everytime you see a little ">" on the screen it\'s your turn to play the game. You have a handful of commands that you can use in every situation that you can review by typing "commands".')
         print('Each of the commands that you can use do use some time, this becomes important specially in the fights where losing time could mean death.')
         print('We suggest testing and exploring the commnads by yourself, but if you want more info on some commands you can:')
         print('\tGo to our github page and read the complete readme: https://github.com/PapaSinku/Sins-Virtues')
@@ -58,12 +60,12 @@ def toturial_if_needed(string):
         print('There are some shops located in the game that you can use to sell your unwanted items and buy the things you want. The currencies in this game are "coins".')
         print('Not all shopkeepers are the same, some have higher prices, some buy your items at a higher price. explore and find the shopkeeper that suits you the best.')
         cprint('\n===Homes===\n', 'green')
-        print('Homes can be used to rest the night and restore your hp. It also usualy contains a good item inside.')
+        print('Homes can be used to rest the night and restore your hp. They also usualy contains a good item inside.')
         print('But not all homes are empty. Enter with caution.')
         cprint('\n===Fights===\n', 'red')
-        print('Fights in this game are text based. The only command for attacking that you have is "attack" that uses the equipped item to attack the enemy.')
-        print('Each move you or your enemy make in a fight uses some time, the turnes in the fight are calculated by using that time.')
-        print('always make sure to have equipped your best weapon before exploring into the unknown. You never know when the next enemy is going to fight you and that extra "equip" might be what saves or kills you in the end.')
+        print('Fights in this game are text based also. The only command for attacking that you have is "attack" that uses the equipped item to attack the enemy.')
+        print('Each move you or your enemy make in a fight uses some time, the turns in the fights are calculated by using that time.')
+        print('Always make sure to have equipped your best weapon before exploring into the unknown. You never know when the next enemy is going to fight you and that extra "equip" might be what saves or kills you in the end.')
         cprint('\n===Castle===', 'magenta')
         print('To finish the game, you need to find the castle and explore it completely to the end. You have 2 options to find the castle:')
         print('\texplore blindly untill you come across the castle block')
@@ -73,27 +75,32 @@ def toturial_if_needed(string):
         exit()
 
 def slow(text, speed=13):
+    #TODO: Fix this shit fast.
     """function which displays characters one at a time"""
-    poller = KeyboardPoller()
-    poller.start()
+    # poller = KeyboardPoller()
+    # poller.start()
     for i in range(len(text)):
         if (text[i] == '\n'): 
             print()
         else: 
             print(text[i], end="")
-        if (data_ready.isSet()):
-            data_ready.clear()
-            poller.join()
-            print(text[i+1:], end="")
-            sys.stdout.flush()
-            return
+        # if (data_ready.isSet()):
+        #     data_ready.clear()
+        #     poller.join()
+        #     print(text[i+1:], end="")
+        #     sys.stdout.flush()
+        #     return
         sys.stdout.flush()
-        sleep(1/speed)
-    pyautogui.press('a')
-    data_ready.clear()
-    poller.join()
+        x = 1 + ((random() - 0.5) * 0.4)
+        sleep(1/(speed * x * 1.4))
+    # pyautogui.press('a')
+    # data_ready.clear()
+    # poller.join()
+    return
 
 def intro_cutscene():
+    cprint('\n======== Sins & Virtues ========', 'blue')
+    cprint('=== A game made by PapaSinku ===\n', 'yellow')
     dialog('Unknown', "Have you ever been to the SinkuLand?\n", 'red', speed=8)
     dialog('You', "No I can't recall...", 'yellow', speed=4)
     dialog('Unknown', "Close your eyes, and just imagine SinkuLand...", 'red', speed=10)

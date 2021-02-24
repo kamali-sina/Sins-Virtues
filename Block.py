@@ -3,6 +3,7 @@ import Item
 from Enemy import get_random_enemy, get_endgame_boss
 from termcolor import colored
 from time import sleep
+from sys import exit
 import ConsoleHandler
 
 class Block:

@@ -2,6 +2,7 @@ import sys
 import os
 from ConsoleHandler import error,help_if_needed, toturial_if_needed, NEWGAME, LOADGAME
 from Game import Game
+from sys import exit
 
 if __name__ == "__main__":
     if (len(sys.argv) < 2):

@@ -4,6 +4,7 @@ from Block import DigableBlock, NormalBlock, ShopBlock
 import Block
 from termcolor import colored
 from time import sleep
+from sys import exit
 from Player import Player
 from Map import Map
 

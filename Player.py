@@ -1,5 +1,7 @@
 from termcolor import colored, cprint
 from Item import get_random_item, HpItem, Fist, CoinItem
+from sys import exit
+
 STARTING_MAX_hp = 10
 STARTING_GOLD = 0
 STARTING_LOCATION = [0,0]
@@ -24,6 +26,9 @@ class Player:
         self.location[1] += tup[1]
     
     def print_inventory(self):
+        if (len(self.inventory) == 0): 
+            print('There are no items in your inventory.')
+            return
         for item in self.inventory:
             print(item)
     
