@@ -10,7 +10,7 @@ from Map import Map
 
 class Game:
     def __init__(self,path_to_savefiles=None, newgame=True):
-        self.NORMAL_COMMANDS = ['move', 'inventory', 'use', 'info', 'commands', 'map', 'equip']
+        self.NORMAL_COMMANDS = ['move', 'inventory', 'use', 'info', 'commands', 'devmap', 'equip']
         self.NORMAL_COMMANDS_HANDLER = [self.move, self.inventory, self.use, self.info, self.commands, self.pmap, self.equip]
         self.FIGHT_COMMANDS = ['inventory', 'info', 'use', 'attack', 'commands', 'equip']
         self.FIGHT_COMMANDS_HANDLER = [self.inventory, self.info, self.use, self.attack, self.commands, self.equip]
@@ -160,8 +160,6 @@ class Game:
             ConsoleHandler.cant_attack_with_item_dialog()
 
     def use(self, dupped_str):
-        utility_items = ['shovel', 'compass', 'steroid']
-        utility_handlers = [self.dig_here, self.use_compass, self.use_steroid]
         if (len(dupped_str) < 2):
             self.unknown_command_dialog()
             return
@@ -170,12 +168,7 @@ class Game:
             ConsoleHandler.dont_have_items_dialog()
             return
         if('utility' in self.player.inventory[index].tags):
-            try:
-                handler_index = utility_items.index(dupped_str[1])
-            except:
-                error('Unexpected error accured!')
-                exit()
-            utility_handlers[handler_index](index)
+            self.player.inventory[index].use(self, index)
         elif ('hp' in self.player.inventory[index].tags):
             self.player.heal(index)
         else:
@@ -201,14 +194,14 @@ class Game:
         if (len(dupped_str) != 1):
             self.unknown_command_dialog()
             return
-        exclude = ['map']
+        exclude = ['devmap']
         print('Available commands:')
         for x in self.current_commandset:
             if (x not in exclude):
                 print(f'                  {colored("-", "cyan")}{x}')
     
     def pmap(self, dupped_str):
-        self.map.print_map(self.player.location)
+        self.map.print_full_map(self.player.location)
     
     def prompt_handler(self, dupped_str):
         if (len(dupped_str) != 1):
@@ -221,14 +214,6 @@ class Game:
         if (response != ''): print(response)
         self.state = 'normal'
     
-    def use_compass(self, inventory_index):
-        print(self.map.compass(self.player.location))
-    
-    def use_steroid(self, inventory_index):
-        self.player.use_utility(inventory_index)
-        self.player.use_steroid(inventory_index)
-        print(f'max hp is now {colored(self.player.max_hp, "red")}')
-
     def dig_here(self, inventory_index):
         block = self.map.get(self.player.location)
         if (not isinstance(block, DigableBlock)):
