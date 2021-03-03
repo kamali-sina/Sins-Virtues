@@ -4,11 +4,11 @@ from random import random
 from sys import exit
 
 
-MAP_SIZE = 13
-DEFAULT_VALUES = [(DigableBlock,4, (0,0)),
-                    (HomeBlock,2, (2,2)),
-                    (CastleBlock, 1, (5,5)),
-                    (ShopBlock, 1, (3,3))]
+MAP_SIZE = 20
+DEFAULT_VALUES = [(DigableBlock, MAP_SIZE//3, (0,0)),
+                    (HomeBlock, MAP_SIZE//6, (MAP_SIZE//5, MAP_SIZE//5)),
+                    (CastleBlock, 1, (MAP_SIZE//2.5, MAP_SIZE//2.5)),
+                    (ShopBlock, MAP_SIZE//7, (MAP_SIZE//4,MAP_SIZE//4))]
 class Map:
     def __init__(self, path_to_save=None):
         self.map = []
@@ -69,15 +69,33 @@ class Map:
             tensor[i] = tensor[i] / s
         return tensor
 
-    def print_map(self, tup):
+    def print_full_map(self, tup):
         indexes = self.tup_to_index(tup)
         for i in range(MAP_SIZE):
             for j in range(MAP_SIZE):
                 if (indexes[0] == i and indexes[1] == j):
-                    print(colored(self.map[i][j], 'blue'), end = "  ")
+                    print(colored(self.map[i][j], 'cyan'), end = "  ")
                     continue
                 print(self.map[i][j], end = "  ")
             print()
+    
+    def print_partial_map(self, tup, vision):
+        indexes = self.tup_to_index(tup)
+        tool = (vision * 2) + 1
+        count = ((tool+1) * 2) + tool + 2
+        print(count * '-')
+        for i in range(indexes[0] - vision, indexes[0] + vision + 1):
+            print('|', end = "  ")
+            for j in range(indexes[1] - vision, indexes[1] + vision + 1):
+                if (self.is_location_valid(self.index_to_tup([i,j]))):
+                    if (indexes[0] == i and indexes[1] == j):
+                        print(colored(self.map[i][j].name[0], 'cyan'), end = "  ")
+                        continue
+                    print(self.map[i][j].get_oneworder(), end = "  ")
+                else:
+                    print('x', end = "  ")
+            print('|')
+        print(count * '-')
     
     def tup_to_index(self, tup):
         val = (MAP_SIZE - 1)//2
