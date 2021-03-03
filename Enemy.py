@@ -46,7 +46,7 @@ class Wolf(Enemy):
     """can be given a single meat to end fight"""
     def __init__(self):
         self.name = "wolf"
-        self.hp = 4
+        self.hp = 3
         self.bounty = 2
         self.damage = 3
         self.speed = 7
@@ -57,10 +57,10 @@ class Wolf(Enemy):
 class BigBob(Enemy):
     def __init__(self):
         self.name = "big bob"
-        self.hp = 12
+        self.hp = 10
         self.bounty = 2
         self.damage = 6
-        self.speed = 3
+        self.speed = 2
 
 class BloatedBoss(Boss):
     def __init__(self):
@@ -69,7 +69,7 @@ class BloatedBoss(Boss):
         self.bounty = 20
         self.healing = 1
         self.damage = 7
-        self.speed = 4
+        self.speed = 3
 
     def get_damaged(self, damage):
         self.hp -= damage
