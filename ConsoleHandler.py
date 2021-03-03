@@ -75,27 +75,34 @@ def toturial_if_needed(string):
         exit()
 
 def slow(text, speed=13):
-    #TODO: Fix this shit fast.
     """function which displays characters one at a time"""
-    # poller = KeyboardPoller()
-    # poller.start()
+    poller = KeyboardPoller()
+    poller.start()
     for i in range(len(text)):
         if (text[i] == '\n'): 
             print()
         else: 
             print(text[i], end="")
-        # if (data_ready.isSet()):
-        #     data_ready.clear()
-        #     poller.join()
-        #     print(text[i+1:], end="")
-        #     sys.stdout.flush()
-        #     return
+        if (data_ready.isSet()):
+            data_ready.clear()
+            poller.join()
+            print(text[i+1:], end="")
+            sys.stdout.flush()
+            return
         sys.stdout.flush()
         x = 1 + ((random() - 0.5) * 0.4)
         sleep(1/(speed * x * 1.4))
-    # pyautogui.press('a')
-    # data_ready.clear()
-    # poller.join()
+    i = 0
+    do_once = True
+    while (not data_ready.isSet()):
+        if (i > 70 and do_once):
+            do_once = False
+            print('-press any key to continue-', end="")
+            sys.stdout.flush()
+        i += 1
+        sleep(0.05)
+    data_ready.clear()
+    poller.join()
     return
 
 def intro_cutscene():
