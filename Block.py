@@ -1,5 +1,5 @@
 from random import random
-import Item
+from Item import ALL_ITEMS, get_random_item
 from Enemy import get_random_enemy, get_endgame_boss
 from termcolor import colored
 from time import sleep
@@ -9,6 +9,7 @@ import ConsoleHandler
 class Block:
     def __init__(self):
         self.name = ""
+        self.color = 'white'
         self.tags = []
         self.rarity = 1
         self.has_special_prompt = False
@@ -18,8 +19,10 @@ class Block:
         return 'default block'
 
     def __str__(self):
-        return self.name
+        return colored(self.name, self.color)
 
+    def get_oneworder(self):
+        return colored(self.name[0], self.color)
 
 class CastleBlock(Block):
     def __init__(self):
@@ -27,6 +30,7 @@ class CastleBlock(Block):
         self.number_of_enemies = int(random() * MAX_NUMBER_OF_ENEMIES) + 1
         self.rarity = 9999
         self.name = "castle"
+        self.color = 'yellow'
         self.enemies = []
         self.boss = None
         self.has_special_prompt = True
@@ -63,27 +67,21 @@ class CastleBlock(Block):
             exit()
         return response
 
-    def __str__(self):
-        return colored(self.name, 'yellow')
-
 class DigableBlock(Block):
     def __init__(self):
         self.ITEM_CHANCE = 0.9
         self.tags = ['random', 'special', 'loot']
         self.name = "digable"
+        self.color = 'red'
         self.has_special_prompt = False
         self.has_adjacent_dialog = False
         self.rarity = 10
         self.contains_item = random() < self.ITEM_CHANCE
         if (self.contains_item):
-            self.item_inside = Item.get_random_item(luck_factor=0)
+            self.item_inside = get_random_item(luck_factor=0)
     
     def get_info(self):
         return 'It looks like I can dig here with a shovel!'
-
-    def __str__(self):
-        return colored(self.name, 'red')
-
 
 class NormalBlock(Block):
     def __init__(self, no_chest=False):
@@ -91,6 +89,7 @@ class NormalBlock(Block):
         self.tags = ['random', 'loot']
         self.rarity = 1
         self.name = "normal"
+        self.color = 'white'
         if (no_chest):
             self.contains_item = False
         else:
@@ -98,7 +97,7 @@ class NormalBlock(Block):
         self.has_special_prompt = self.contains_item
         self.has_adjacent_dialog = self.contains_item
         if (self.contains_item):
-            self.item_inside = Item.get_random_item(luck_factor=0)
+            self.item_inside = get_random_item(luck_factor=0)
 
     def get_info(self):
         if (self.contains_item):
@@ -136,13 +135,14 @@ class HomeBlock(Block):
         self.tags = ['random', 'special']
         self.rarity = 80
         self.name = "home"
+        self.color = 'green'
         self.has_adjacent_dialog = True
         self.has_special_prompt = True
         self.contains_item = True
         self.contains_enemy = random() < self.ENEMY_CHANCE
         if (self.contains_enemy):
             self.enemy = get_random_enemy()
-        self.item_inside = Item.get_random_item(luck_factor=0)
+        self.item_inside = get_random_item(luck_factor=0)
 
     def get_info(self):
         return 'This looks like a place to rest.'
@@ -173,9 +173,6 @@ class HomeBlock(Block):
                 response += f'\nfound a {self.item_inside.name} here'
         return response
 
-    def __str__(self):
-        return colored(self.name, 'green')
-
 
 class ShopBlock(Block):
     def __init__(self):
@@ -185,6 +182,7 @@ class ShopBlock(Block):
         self.tags = ['random', 'special']
         self.rarity = 100
         self.name = "shop"
+        self.color = 'yellow'
         self.has_special_prompt = True
         self.has_adjacent_dialog = True
         self.stock = self.make_stock()
@@ -195,7 +193,7 @@ class ShopBlock(Block):
     def make_stock(self):
         ignored_tags = ['coin']
         stock = [[],[],[]]
-        for item in Item.ALL_ITEMS:
+        for item in ALL_ITEMS:
             temp = item()
             if (self.check_tags(ignored_tags, temp)): continue
             name = temp.name
@@ -242,8 +240,5 @@ class ShopBlock(Block):
         else:
             game.enter_shop()
         return response
-
-    def __str__(self):
-        return colored(self.name, 'yellow')
 
 ALL_BLOCKS = [CastleBlock, DigableBlock, NormalBlock, HomeBlock, ShopBlock]
