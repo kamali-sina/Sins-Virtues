@@ -46,6 +46,9 @@ class UtilityItem(Item):
         price_multiplier = int((MAX - MIN + 1) * random()) + MIN
         return int(self.rarity * price_multiplier * (self.uses / self.INITIAL_USES))
 
+    def use(self, game, inventory_index):
+        print('this has to be re-writed')
+
 class HpItem(Item):
     def __init__(self):
         self.name = 'hp'
@@ -75,6 +78,9 @@ class Shovel(UtilityItem):
         self.speed = 4
         self.name = "shovel"
         self.uses = self.INITIAL_USES
+    
+    def use(self, game, inventory_index):
+        game.dig_here(inventory_index)
 
 class Compass(UtilityItem):
     def __init__(self):
@@ -84,6 +90,22 @@ class Compass(UtilityItem):
         self.name = "compass"
         self.uses = self.INITIAL_USES
 
+    def use(self, game, inventory_index):
+        print(game.map.compass(game.player.location))
+
+class Map(UtilityItem):
+    def __init__(self):
+        self.rarity = 8
+        self.INITIAL_USES = 3
+        self.tags = ["utility", 'random']
+        self.name = "map"
+        self.uses = self.INITIAL_USES
+
+    def use(self, game, inventory_index):
+        MAP_VISION = 2
+        game.player.use_utility(inventory_index)
+        game.map.print_partial_map(game.player.location, MAP_VISION)
+
 class Steroid(UtilityItem):
     def __init__(self):
         self.rarity = 12
@@ -91,6 +113,11 @@ class Steroid(UtilityItem):
         self.tags = ["utility", 'random']
         self.name = "steroid"
         self.uses = self.INITIAL_USES
+    
+    def use(self, game, inventory_index):
+        game.player.use_utility(inventory_index)
+        game.player.use_steroid(inventory_index)
+        print(f'max hp is now {colored(game.player.max_hp, "red")}')
 
 class Fist(AttackItem):
     def __init__(self):
@@ -104,19 +131,37 @@ class Knife(AttackItem):
     def __init__(self):
         self.INITIAL_USES = 6
         self.rarity = 7
-        self.tags = ["utility", 'attack', 'random']
+        self.tags = ["utility", 'attack', 'random', 'melee']
         self.name = "knife"
         self.uses = self.INITIAL_USES
-        self.damage = 5
+        self.damage = 3
         self.speed = 9
 
 class Sword(AttackItem):
     def __init__(self):
-        self.tags = ['attack', 'random']
-        self.rarity = 13
+        self.tags = ['attack', 'random', 'melee']
+        self.rarity = 14
         self.name = "sword"
-        self.damage = 10
+        self.damage = 7
         self.speed = 6
+
+class Axe(AttackItem):
+    def __init__(self):
+        self.tags = ['attack', 'random', 'melee']
+        self.rarity = 10
+        self.name = "axe"
+        self.damage = 10
+        self.speed = 2
+
+#TODO: handle ranged miss chance
+class Peacemaker(AttackItem):
+    def __init__(self):
+        self.MISS_CHANCE = 0.1
+        self.tags = ['attack', 'random', 'ranged']
+        self.rarity = 10
+        self.name = "peacemaker"
+        self.damage = 6
+        self.speed = 7
 
 class Apple(HpItem):
     def __init__(self):
@@ -159,7 +204,7 @@ class CoinBag(CoinItem):
         self.tags = ['coin', 'random']
         self.amount = int((self.MAX - self.MIN + 1) * random()) + self.MIN
 
-ALL_ITEMS = [Shovel, Compass, Knife, Sword, CoinStack, CoinBag, Apple, Meat, Celery, Steroid]
+ALL_ITEMS = [Shovel, Compass, Knife, Sword, CoinStack, CoinBag, Apple, Meat, Celery, Steroid, Axe, Peacemaker, Map]
 ITEM_TENSOR = []
 
 #TODO: use luck factor and make item generation better
