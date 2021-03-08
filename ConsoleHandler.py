@@ -5,14 +5,20 @@ import os
 import threading
 # import pyautogui
 from random import random
-import getch
+try: 
+    import msvcrt
+except:
+    import getch
 from sys import exit
 
 data_ready = threading.Event()
 
 class KeyboardPoller( threading.Thread ) :
     def run( self ) :
-        getch.getch()
+        try:
+            msvcrt.getch()
+        except:
+            getch.getch()
         data_ready.set()
         return
 
