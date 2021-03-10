@@ -4,6 +4,7 @@ from time import sleep
 import sys
 from ConsoleHandler import dialog
 from sys import exit
+from StatusEffect import PoisonEffect
 
 #TODO: add poison damage
 class Enemy:
@@ -19,6 +20,10 @@ class Enemy:
     
     def get_kill_dialog(self):
         return f"Found {colored(self.bounty,'yellow')} coin(s) on the {self.name}"
+    
+    def attack(self, player):
+        player.hp -= self.damage
+        print(f'{self.name} attacks you for {colored(str(self.damage), "red")} damage!')
     
     def __str__(self):
         return f"name: {self.name} - hp: {self.hp} - speed: {self.speed} - damage: {self.damage}"
@@ -62,6 +67,20 @@ class BigBob(Enemy):
         self.damage = 6
         self.speed = 2
 
+class Rotter(Enemy):
+    def __init__(self):
+        self.name = "rotter"
+        self.hp = 7
+        self.bounty = 3
+        self.damage = 1
+        self.speed = 6
+    
+    def attack(self, player):
+        player.hp -= self.damage
+        effect = PoisonEffect()
+        player.status_effects.append(effect)
+        print(f'{self.name} attacks you for {colored(str(self.damage), "red")} poison damage! You are now {effect}ed!')
+
 class BloatedBoss(Boss):
     def __init__(self):
         self.name = "bloated"
@@ -87,7 +106,7 @@ class BloatedBoss(Boss):
     def get_kill_dialog(self):
         return f"Acid does no go brrrrrrrr anymore..."
 
-normal_enemys = [Guy, Wolf, BigBob]
+normal_enemys = [Guy, Wolf, BigBob, Rotter]
 endgame_bosses = [BloatedBoss]
 
 def get_random_enemy():
