@@ -18,10 +18,12 @@ class Player:
         self.location = STARTING_LOCATION
         self.equipped = STARTING_EQIPPED_ITEM
         self.status_effects = []
-        for i in range(20):
-            self.add_item(get_random_item())
         # if (path_to_save):
         #     self.load_from_save(path_to_save)
+
+    def _fill_inventory(self, count=20):
+        for i in range(20):
+            self.add_item(get_random_item())
 
     def load_from_save(self, path_to_save):
         print('player: loading from save!')
@@ -34,8 +36,13 @@ class Player:
         if (len(self.inventory) == 0): 
             print('There are no items in your inventory.')
             return
+        print('==========Inventory==========')
+        print('  name                 info  ')
+        print('-----------------------------')
         for item in self.inventory:
-            print(item)
+            print(f' {item}', end="")
+            spaces = 22 - len(item.name)
+            print(f'{" " * spaces}{item.info()}')
     
     def print_info(self):
         print(colored("hp",'green') + f': {self.hp}')
@@ -43,6 +50,7 @@ class Player:
         print(colored("location",'blue') + f': {self.location}')
         print(colored("equipped item",'white') + f': {str(self.equipped)}')
         print(f'{len(self.inventory)} item(s) in ' + colored("inventory",'cyan'))
+        self.print_affected_effects()
     
     def index_item(self, item_name):
         for i in range(len(self.inventory)):
@@ -106,6 +114,9 @@ class Player:
             if (effect.turns <= 0):
                 self.status_effects.pop(i)
                 print(f'status effect {effect} ended!')
+    
+    def reset_status_effects(self):
+        self.status_effects = []
     
     def print_affected_effects(self):
         for effect in self.status_effects:
