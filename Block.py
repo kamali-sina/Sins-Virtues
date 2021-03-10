@@ -1,6 +1,6 @@
 from random import random
 from Item import ALL_ITEMS, get_random_item
-from Enemy import get_random_enemy, get_endgame_boss
+from Enemy import get_random_enemy, get_endgame_boss, Rotter
 from termcolor import colored
 from time import sleep
 from sys import exit
