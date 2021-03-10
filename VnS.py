@@ -1,6 +1,6 @@
 import sys
 import os
-from ConsoleHandler import error,help_if_needed, toturial_if_needed, NEWGAME, LOADGAME
+from ConsoleHandler import error,help_if_needed, toturial_if_needed, NEWGAME, LOADGAME, DEVMODE, info_if_needed
 from Game import Game
 from sys import exit
 
@@ -9,6 +9,7 @@ if __name__ == "__main__":
         error('no arguments were provided.\n\nif you need help use -h or --help')
         exit()
     help_if_needed(sys.argv[1])
+    info_if_needed(sys.argv[1])
     toturial_if_needed(sys.argv[1])
     path = './'
     if (len(sys.argv) > 2):
@@ -18,7 +19,10 @@ if __name__ == "__main__":
         game_session = Game(path_to_savefiles=path, newgame=True)
     elif(sys.argv[1] == LOADGAME):
         game_session = Game(path_to_savefiles=path, newgame=False)
+    elif(sys.argv[1] == DEVMODE):
+        game_session = Game(path_to_savefiles=path, newgame=True, devmode=True)
     else:
         error('undefined option was provided!')
+        exit(0)
     
     game_session.run()
