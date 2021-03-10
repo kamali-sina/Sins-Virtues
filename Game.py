@@ -9,7 +9,7 @@ from Player import Player
 from Map import Map
 
 class Game:
-    def __init__(self,path_to_savefiles=None, newgame=True):
+    def __init__(self,path_to_savefiles=None, newgame=True, devmode=False):
         self.NORMAL_COMMANDS = ['move', 'inventory', 'use', 'info', 'commands', 'devmap', 'equip']
         self.NORMAL_COMMANDS_HANDLER = [self.move, self.inventory, self.use, self.info, self.commands, self.pmap, self.equip]
         self.FIGHT_COMMANDS = ['inventory', 'info', 'use', 'attack', 'commands', 'equip']
@@ -20,9 +20,12 @@ class Game:
         self.SHOP_COMMANDS_HANDLER = [self.inventory, self.info, self.commands, self.stock, self.buy, self.sell, self.exit_shop]
         self.my_time = float(0)
         self.enemy_time = float(0)
-        intro_cutscene()
         self.player = Player(path_to_savefiles)
         self.map = Map(path_to_savefiles)
+        if (not devmode):
+            intro_cutscene()
+        else:
+            self.player._fill_inventory()
 
     def run(self):
         self.idiot_counter = 0
@@ -186,7 +189,7 @@ class Game:
         elif (self.state == 'fight'): print(f'enemy has {colored(self.enemy.hp,"red")} hp left')
     
     def attack(self, dupped_str):
-        self.player.update_status_effects()
+        self.attacked = True
         self.my_time += self.enemy.speed
         self.player.attack(self.enemy)
 
@@ -252,6 +255,7 @@ class Game:
         self.enemy = enemy
         self.my_time = float(enemy.speed)
         self.enemy_time = float(self.player.equipped.speed)
+        self.attacked = False
         while(True):
             if (self.enemy_time < self.my_time):
                 #Enemy's turn to attack!
@@ -259,7 +263,9 @@ class Game:
                 self.enemy_time += self.player.equipped.speed
             else:
                 #our turn to attack
-                #TODO: updating effects
+                if (self.attacked):
+                    self.attacked = False
+                    self.player.update_status_effects()
                 print(colored("Your hp",'green') + f': {self.player.hp}')
                 print(colored("Enemy's hp",'red') + f': {self.enemy.hp}\n')
                 self.player.print_affected_effects()
@@ -273,6 +279,7 @@ class Game:
                 dialog("You", self.enemy.get_kill_dialog(), "yellow", speed=18)
                 self.player.coin += self.enemy.bounty
                 break
+        self.player.reset_status_effects()
         self.state = 'normal'
     
     def enter_shop(self):
