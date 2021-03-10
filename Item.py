@@ -12,6 +12,9 @@ class Item:
 
     def __str__(self):
         return self.name
+    
+    def info(self):
+        return 'info'
 
     def get_sell_price(self):
         MAX = 0.80
@@ -28,7 +31,10 @@ class CoinItem(Item):
         self.amount = int((self.MAX - self.MIN + 1) * random()) + self.MIN
     
     def __str__(self):
-        return colored(self.name, "yellow") + ' ---- amount: ' + str(self.amount)
+        return colored(self.name, "yellow")
+
+    def info(self):
+        return 'amount: ' + str(self.amount)
 
 class UtilityItem(Item):
     def __init__(self):
@@ -38,7 +44,10 @@ class UtilityItem(Item):
         self.uses = self.INITIAL_USES
     
     def __str__(self):
-        return colored(self.name, "blue") + ' ---- uses remaining: ' + str(self.uses)
+        return colored(self.name, "blue")
+    
+    def info(self):
+        return 'uses remaining: ' + str(self.uses)
     
     def get_sell_price(self):
         MAX = 0.80
@@ -56,17 +65,47 @@ class HpItem(Item):
         self.hp = 0
     
     def __str__(self):
-        return colored(self.name, "green") + ' ---- restores: ' + str(self.hp) + ' hp'
+        return colored(self.name, "green")
+    
+    def info(self):
+        return 'restores: ' + str(self.hp) + 'hp'
 
 class AttackItem(Item):
     def __init__(self):
         self.tags = ['attack']
         self.name = "sword"
         self.speed = 0
+        self.type = 'unknown'
         self.damage = 0
 
     def __str__(self):
-        return colored(self.name, "red") + ' ---- damage: ' + str(self.damage) + ' - speed: ' + str(self.speed)
+        return colored(self.name, "red")
+    
+    def info(self):
+        return 'damage: ' + str(self.damage) + ', speed: ' + str(self.speed)
+
+class MeleeAttackItem(AttackItem):
+    def __init__(self):
+        self.tags = ['attack', 'melee']
+        self.name = "sword"
+        self.speed = 0
+        self.type = 'melee'
+        self.damage = 0
+    
+    def info(self):
+        return 'damage: ' + str(self.damage) + ', speed: ' + str(self.speed) + ', type: ' + self.type
+
+class RangedAttackItem(AttackItem):
+    def __init__(self):
+        self.MISS_CHANCE = 0
+        self.tags = ['attack', 'ranged']
+        self.name = "pistol"
+        self.speed = 0
+        self.type = 'ranged'
+        self.damage = 0
+    
+    def info(self):
+        return 'damage: ' + str(self.damage) + ', speed: ' + str(self.speed) + ', type: ' + self.type + ', misschance: ' + str(int(self.MISS_CHANCE*100)) + '%'
 
 
 class Shovel(UtilityItem):
@@ -92,6 +131,9 @@ class Compass(UtilityItem):
 
     def use(self, game, inventory_index):
         print(game.map.compass(game.player.location))
+    
+    def info(self):
+        return 'infinite uses'
 
 class Map(UtilityItem):
     def __init__(self):
@@ -119,46 +161,51 @@ class Steroid(UtilityItem):
         game.player.use_steroid(inventory_index)
         print(f'max hp is now {colored(game.player.max_hp, "red")}')
 
-class Fist(AttackItem):
+class Fist(MeleeAttackItem):
     def __init__(self):
         self.tags = ['attack']
         self.rarity = 999
+        self.type = 'melee'
         self.name = "fist"
         self.damage = 1
         self.speed = 6
 
-class Knife(AttackItem):
+class Knife(MeleeAttackItem):
     def __init__(self):
-        self.INITIAL_USES = 6
+        self.INITIAL_USES = 1
         self.rarity = 7
         self.tags = ["utility", 'attack', 'random', 'melee']
         self.name = "knife"
+        self.type = 'melee'
         self.uses = self.INITIAL_USES
         self.damage = 3
         self.speed = 9
 
-class Sword(AttackItem):
+class Sword(MeleeAttackItem):
     def __init__(self):
         self.tags = ['attack', 'random', 'melee']
         self.rarity = 14
         self.name = "sword"
+        self.type = 'melee'
         self.damage = 7
         self.speed = 6
 
-class Axe(AttackItem):
+class Axe(MeleeAttackItem):
     def __init__(self):
         self.tags = ['attack', 'random', 'melee']
         self.rarity = 10
         self.name = "axe"
+        self.type = 'melee'
         self.damage = 10
         self.speed = 2
 
 #TODO: handle ranged miss chance
-class Peacemaker(AttackItem):
+class Peacemaker(RangedAttackItem):
     def __init__(self):
         self.MISS_CHANCE = 0.2
         self.tags = ['attack', 'random', 'ranged']
         self.rarity = 10
+        self.type = 'ranged'
         self.name = "peacemaker"
         self.damage = 6
         self.speed = 7
