@@ -1,5 +1,7 @@
 from termcolor import colored, cprint
+from random import random
 from Item import get_random_item, HpItem, Fist, CoinItem
+import ConsoleHandler
 from sys import exit
 
 STARTING_MAX_hp = 10
@@ -15,6 +17,9 @@ class Player:
         self.coin = STARTING_GOLD
         self.location = STARTING_LOCATION
         self.equipped = STARTING_EQIPPED_ITEM
+        self.status_effects = []
+        for i in range(20):
+            self.add_item(get_random_item())
         # if (path_to_save):
         #     self.load_from_save(path_to_save)
 
@@ -82,3 +87,26 @@ class Player:
         self.coin += price
         self.inventory.pop(index)
         return price
+    
+    def attack(self, enemy):
+        damage = self.equipped.damage
+        if ('ranged' in self.equipped.tags):
+            if (random() < self.equipped.MISS_CHANCE):
+                damage =  0
+        if (damage > 0):
+            enemy.get_damaged(damage)
+            print(f'attacked {colored(enemy.name, "magenta")} for {colored(self.equipped.damage,"red")} damage!')
+        else:
+            ConsoleHandler.miss_dialog()
+    
+    def update_status_effects(self):
+        for i in range(len(self.status_effects) - 1, -1, -1):
+            effect = self.status_effects[i]
+            effect.apply(self)
+            if (effect.turns <= 0):
+                self.status_effects.pop(i)
+                print(f'status effect {effect} ended!')
+    
+    def print_affected_effects(self):
+        for effect in self.status_effects:
+            print(effect.description())
