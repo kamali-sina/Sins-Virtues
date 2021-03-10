@@ -1,3 +1,5 @@
+GAMEVERSION = '1.0.2'
+
 from termcolor import colored, cprint
 import sys
 from time import sleep
@@ -23,8 +25,10 @@ class KeyboardPoller( threading.Thread ) :
         return
 
 HELPS = ['-h', '--help']
+INFOS = ['-i', '--info']
 NEWGAME = '-n'
 LOADGAME = '-s'
+DEVMODE = '--dev'
 TOTURIALS = ['-t', '--toturial']
 
 def error(string):
@@ -45,11 +49,18 @@ def help_if_needed(string):
         load = colored(f'"{LOADGAME}"','yellow')
         toturial = colored(f'"{TOTURIALS[0]}"','yellow')
         helps = colored(f'"{HELPS[0]}"','yellow')
+        infos = colored(f'"{INFOS[0]}"','yellow')
         print(f'  {new}: for starting a new game. \n    can be followed by the path to save the game. saves in the current directory as default\n')
         # print(f'  {load}: for resuming from a save file.\n    must be followed by the path to the save directory')
         print(f'  {load}: does not do anything currently.\n')
         print(f'  {toturial}: for learning the game. \n')
+        print(f'  {infos}: for getting version info of the game \n')
         print(f'  {helps}: for seeing the page you are reading now. \n')
+        exit()
+
+def info_if_needed(string):
+    if (string in INFOS):
+        print(f'VnS version {GAMEVERSION}\nmore info at: https://github.com/PapaSinku/Sins-Virtues')
         exit()
 
 def toturial_if_needed(string):
