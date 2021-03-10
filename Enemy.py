@@ -73,11 +73,16 @@ class Rotter(Enemy):
         self.hp = 7
         self.bounty = 3
         self.damage = 1
-        self.speed = 6
-    
+        self.speed = 4
+
     def attack(self, player):
         player.hp -= self.damage
         effect = PoisonEffect()
+        for ef in player.status_effects:
+            if (isinstance(ef, PoisonEffect)):
+                ef.reset()
+                print(f'{self.name} attacks you for {colored(str(self.damage), "red")} poison damage! You are now {effect}ed!')
+                return
         player.status_effects.append(effect)
         print(f'{self.name} attacks you for {colored(str(self.damage), "red")} poison damage! You are now {effect}ed!')
 
