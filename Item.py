@@ -156,7 +156,7 @@ class Axe(AttackItem):
 #TODO: handle ranged miss chance
 class Peacemaker(AttackItem):
     def __init__(self):
-        self.MISS_CHANCE = 0.1
+        self.MISS_CHANCE = 0.2
         self.tags = ['attack', 'random', 'ranged']
         self.rarity = 10
         self.name = "peacemaker"
