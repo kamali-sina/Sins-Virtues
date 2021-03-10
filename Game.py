@@ -186,10 +186,10 @@ class Game:
         elif (self.state == 'fight'): print(f'enemy has {colored(self.enemy.hp,"red")} hp left')
     
     def attack(self, dupped_str):
-        self.enemy.get_damaged(self.player.equipped.damage)
+        self.player.update_status_effects()
         self.my_time += self.enemy.speed
-        print(f'attacked {colored(self.enemy.name, "magenta")} for {colored(self.player.equipped.damage,"red")} damage!')
-    
+        self.player.attack(self.enemy)
+
     def commands(self, dupped_str):
         if (len(dupped_str) != 1):
             self.unknown_command_dialog()
@@ -242,10 +242,6 @@ class Game:
         for item in s:
             dialog("You",item, "yellow", speed=30)
     
-    def enemy_attack(self):
-        self.player.hp -= self.enemy.damage
-        print(f'{self.enemy.name} attacks you for {colored(str(self.enemy.damage), "red")} damage!')
-    
     def fight_enemy(self, enemy):
         print(colored('\n--Entered Battle--\n','red'))
         sleep(0.7)
@@ -259,12 +255,14 @@ class Game:
         while(True):
             if (self.enemy_time < self.my_time):
                 #Enemy's turn to attack!
-                self.enemy_attack()
+                self.enemy.attack(self.player)
                 self.enemy_time += self.player.equipped.speed
             else:
                 #our turn to attack
+                #TODO: updating effects
                 print(colored("Your hp",'green') + f': {self.player.hp}')
                 print(colored("Enemy's hp",'red') + f': {self.enemy.hp}\n')
+                self.player.print_affected_effects()
                 input_str = input(colored("> ",'red')).strip().lower()
                 self.process_input(input_str)
             if (self.player.hp <= 0):
