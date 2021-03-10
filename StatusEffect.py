@@ -2,12 +2,14 @@ from termcolor import colored, cprint
 
 class StatusEffect():
     def __init__(self):
+        self.initial_turns = 0
         self.name = 'statuseffect'
         self.color = 'magenta'
         #HP change: Has to be - for damage and + for healing
         self.hpc = 0
-        self.turns = 0
+        self.turns = self.initial_turns
         self.init()
+        self.reset()
         if (self.hpc > 0): self.color = 'green'
         elif (self.hpc < 0): self.color = 'red'
 
@@ -23,6 +25,9 @@ class StatusEffect():
             return f"I got healed for {self.hpc}hp by the {self.name}"
         else:
             return f"Still affected by the {self.name}"
+    
+    def reset(self):
+        self.turns = self.initial_turns
 
     def init(self):
         self.name = 'status'
@@ -40,6 +45,6 @@ class StatusEffect():
 
 class PoisonEffect(StatusEffect):
     def init(self):
+        self.initial_turns = 3
         self.name = 'poison'
         self.hpc = -2
-        self.turns = 2
