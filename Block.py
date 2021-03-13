@@ -241,4 +241,30 @@ class ShopBlock(Block):
             game.enter_shop()
         return response
 
+class BlacksmithBlock(Block):
+    def __init__(self):
+        self.tags = ['random', 'special']
+        self.rarity = 120
+        self.name = "blacksmith"
+        self.color = 'grey'
+        self.has_special_prompt = True
+        self.has_adjacent_dialog = True
+    
+    def get_adjacent_dialog(self):
+        return 'I can hear hitting on an anvil nearby.'
+    
+    def get_info(self):
+        return 'I can upgrade my weapons and dismantle the extra stuff I found here.'
+    
+    def get_prompt(self):
+        return 'Enter the blacksmith?(y,n)'
+
+    def prompt_handler(self, ans, game):
+        response = ''
+        if (ans == 0):
+            response = "I'll come back when I have more weapon parts!"
+        else:
+            game.enter_shop()
+        return response
+
 ALL_BLOCKS = [CastleBlock, DigableBlock, NormalBlock, HomeBlock, ShopBlock]
