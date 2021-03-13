@@ -76,6 +76,7 @@ class AttackItem(Item):
         self.name = "sword"
         self.speed = 0
         self.type = 'unknown'
+        self.lvl = 1
         self.damage = 0
 
     def __str__(self):
@@ -83,6 +84,10 @@ class AttackItem(Item):
     
     def info(self):
         return 'damage: ' + str(self.damage) + ', speed: ' + str(self.speed)
+    
+    def upgrade(self):
+        self.lvl += 1
+        self.damage += 1
 
 class MeleeAttackItem(AttackItem):
     def __init__(self):
@@ -90,10 +95,16 @@ class MeleeAttackItem(AttackItem):
         self.name = "sword"
         self.speed = 0
         self.type = 'melee'
+        self.lvl = 1
         self.damage = 0
     
     def info(self):
         return 'damage: ' + str(self.damage) + ', speed: ' + str(self.speed) + ', type: ' + self.type
+    #TODO: complete this damage, speed, damage
+    def upgrade(self):
+        if (self.lvl > 4):
+            print('complete this!')
+        
 
 class RangedAttackItem(AttackItem):
     def __init__(self):
@@ -102,10 +113,14 @@ class RangedAttackItem(AttackItem):
         self.name = "pistol"
         self.speed = 0
         self.type = 'ranged'
+        self.lvl = 1
         self.damage = 0
     
     def info(self):
         return 'damage: ' + str(self.damage) + ', speed: ' + str(self.speed) + ', type: ' + self.type + ', misschance: ' + str(int(self.MISS_CHANCE*100)) + '%'
+    
+    #TODO: complete this damage, speed, misschance
+    # def upgrade(self):
 
 
 class Shovel(UtilityItem):
