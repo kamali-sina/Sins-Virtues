@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 _Getch.py
 .vscode
+*.pkl
+test.py
