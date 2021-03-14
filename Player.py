@@ -1,14 +1,15 @@
 from termcolor import colored, cprint
 from random import random
-from Item import get_random_item, HpItem, Fist, CoinItem
+from Item import get_random_item, HpItem, Fist, CoinItem, ScrapBox
 import ConsoleHandler
 from sys import exit
 
 STARTING_MAX_hp = 10
 STARTING_GOLD = 0
+STARTING_SCRAP = 0
 STARTING_LOCATION = [0,0]
 STARTING_EQIPPED_ITEM = Fist()
-
+#TODO: make a way to diffrenciate the items of the same name but different levels
 class Player:
     def __init__(self, path_to_save=None):
         self.inventory = []
@@ -16,13 +17,14 @@ class Player:
         self.hp = self.max_hp
         self.coin = STARTING_GOLD
         self.location = STARTING_LOCATION
+        self.scrap = STARTING_SCRAP
         self.equipped = STARTING_EQIPPED_ITEM
         self.status_effects = []
         # if (path_to_save):
         #     self.load_from_save(path_to_save)
 
     def _fill_inventory(self, count=20):
-        for i in range(20):
+        for i in range(30):
             self.add_item(get_random_item())
 
     def load_from_save(self, path_to_save):
@@ -47,6 +49,7 @@ class Player:
     def print_info(self):
         print(colored("hp",'green') + f': {self.hp}')
         print(colored("coins",'yellow') + f': {self.coin}')
+        print(colored("scraps",'grey') + f': {self.scrap}')
         print(colored("location",'blue') + f': {self.location}')
         print(colored("equipped item",'white') + f': {str(self.equipped)}')
         print(f'{len(self.inventory)} item(s) in ' + colored("inventory",'cyan'))
@@ -77,6 +80,9 @@ class Player:
         if (isinstance(item, CoinItem)):
             self.coin += item.amount
             return
+        if (isinstance(item, ScrapBox)):
+            self.scrap += item.amount
+            return
         self.inventory.append(item)
     
     def refill_hp(self):
@@ -95,6 +101,12 @@ class Player:
         self.coin += price
         self.inventory.pop(index)
         return price
+    
+    def scrap_item(self, index):
+        parts = self.inventory[index].get_scrap_parts()
+        self.scrap += parts
+        self.inventory.pop(index)
+        return parts
     
     def attack(self, enemy):
         damage = self.equipped.damage
