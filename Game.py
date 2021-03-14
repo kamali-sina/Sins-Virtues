@@ -3,6 +3,7 @@ import ConsoleHandler
 from Block import DigableBlock, NormalBlock, ShopBlock
 import Block
 from termcolor import colored
+from Item import AttackItem
 from time import sleep
 from sys import exit
 from Player import Player
@@ -18,6 +19,8 @@ class Game:
         self.PROMPT_COMMANDS_HANDLER = [self.prompt_handler, self.prompt_handler, self.prompt_handler, self.prompt_handler]
         self.SHOP_COMMANDS = ['inventory', 'info', 'commands', 'stock', 'buy', 'sell', 'exit']
         self.SHOP_COMMANDS_HANDLER = [self.inventory, self.info, self.commands, self.stock, self.buy, self.sell, self.exit_shop]
+        self.BLACKSMITH_COMMANDS = ['inventory', 'info', 'commands', 'upgrade', 'scrap', 'exit']
+        self.BLACKSMITH_COMMANDS_HANDLER = [self.inventory, self.info, self.commands, self.upgrade, self.scrap, self.exit_shop]
         self.my_time = float(0)
         self.enemy_time = float(0)
         self.player = Player(path_to_savefiles)
@@ -48,6 +51,9 @@ class Game:
         elif (self.state == 'shop'):
             self.current_commandset = self.SHOP_COMMANDS
             self.current_commandset_handler = self.SHOP_COMMANDS_HANDLER
+        elif (self.state == 'blacksmith'):
+            self.current_commandset = self.BLACKSMITH_COMMANDS
+            self.current_commandset_handler = self.BLACKSMITH_COMMANDS_HANDLER
     
     def process_input(self, input_str):
         if (not self.validate_input(input_str)): return
@@ -141,11 +147,14 @@ class Game:
         if (index == -1):
             ConsoleHandler.dont_have_items_dialog()
             return
-        print(f'{dupped_str[1]} sold for {colored(self.player.sell(index),"yellow")}')
+        price = self.player.inventory[index].get_sell_price()
+        ans = ConsoleHandler.prompt(f'sell item for {price} coins?')
+        if (ans != 0):
+            print(f'{dupped_str[1]} sold for {colored(self.player.sell(index),"yellow")}')
     
     def exit_shop(self, dupped_str):
+        print(f'exiting {self.state}...')
         self.state = 'normal'
-        print('exiting shop...')
     
     def equip(self, dupped_str):
         if (len(dupped_str) < 2):
@@ -187,6 +196,49 @@ class Game:
         block = self.map.get(self.player.location)
         if (self.state == 'normal'): print(f'current block is {colored(block.name,"magenta")}')
         elif (self.state == 'fight'): print(f'enemy has {colored(self.enemy.hp,"red")} hp left')
+
+    def upgrade(self, dupped_str):
+        if (len(dupped_str) < 2):
+            self.unknown_command_dialog()
+            return
+        index = self.player.index_item(dupped_str[1])
+        if (index == -1):
+            ConsoleHandler.dont_have_items_dialog()
+            return
+        if (not isinstance(self.player.inventory[index], AttackItem)):
+            ConsoleHandler.item_not_upgradble_dialog()
+            return
+        price = self.player.inventory[index].get_upgrade_price()
+        level = self.player.inventory[index].lvl + 1
+        if (level > 3):
+            ConsoleHandler.cant_upgrade_maxitem_dialog()
+            return
+        ans = ConsoleHandler.prompt(f'upgrading the {self.player.inventory[index]} to level {level} costs {price} scraps, upgrade?')
+        if (ans == 0):
+            ConsoleHandler.dont_waste_my_time_dialog()
+            return
+        if (self.player.scrap < price):
+            ConsoleHandler.not_enough_scraps_dialog()
+            return
+        result = self.player.inventory[index].upgrade()
+        self.player.scrap -= price
+        print(f'upgraded {dupped_str[1]} for {price} parts. {result}')
+    
+    def scrap(self, dupped_str):
+        if (len(dupped_str) < 2):
+            self.unknown_command_dialog()
+            return
+        index = self.player.index_item(dupped_str[1])
+        if (index == -1):
+            ConsoleHandler.dont_have_items_dialog()
+            return
+        if (not isinstance(self.player.inventory[index], AttackItem)):
+            ConsoleHandler.item_not_scrappable_dialog()
+            return
+        price = self.player.inventory[index].get_scrap_parts()
+        ans = ConsoleHandler.prompt(f'scrap {self.player.inventory[index]} for {price} scraps?')
+        if (ans != 0):
+            print(f'{dupped_str[1]} scrapped for {colored(self.player.scrap_item(index),"grey")} scraps.')
     
     def attack(self, dupped_str):
         self.attacked = True
@@ -289,5 +341,15 @@ class Game:
         while(self.state == 'shop'):
             self.set_command_set()
             input_str = input(colored("> ",'yellow')).strip().lower()
+            self.process_input(input_str)
+        self.set_command_set()
+    
+    def enter_blacksmith(self):
+        print(colored('--Entered Blacksmith--\n','grey'))
+        ConsoleHandler.welcome_to_blacksmith_dialog()
+        self.state = 'blacksmith'
+        while(self.state == 'blacksmith'):
+            self.set_command_set()
+            input_str = input(colored("> ",'grey')).strip().lower()
             self.process_input(input_str)
         self.set_command_set()
