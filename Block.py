@@ -264,7 +264,7 @@ class BlacksmithBlock(Block):
         if (ans == 0):
             response = "I'll come back when I have more weapon parts!"
         else:
-            game.enter_shop()
+            game.enter_blacksmith()
         return response
 
-ALL_BLOCKS = [CastleBlock, DigableBlock, NormalBlock, HomeBlock, ShopBlock]
+ALL_BLOCKS = [CastleBlock, DigableBlock, NormalBlock, HomeBlock, ShopBlock, BlacksmithBlock]
