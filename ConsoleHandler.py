@@ -1,4 +1,4 @@
-GAMEVERSION = '1.0.2'
+GAMEVERSION = '1.1.0'
 
 from termcolor import colored, cprint
 import sys
@@ -145,8 +145,26 @@ def item_not_in_stock_dialog():
 def not_enough_coins_dialog():
     dialog('Shopkeeper', "You do not have enough coins to buy that!", 'green', speed=18)
 
+def not_enough_scraps_dialog():
+    dialog('Blacksmith', "You do not have enough scraps to upgrade that!", 'green', speed=18)
+
 def welcome_to_shop_dialog():
     dialog('Shopkeeper', "Welcome stranger! Whatever you want, I got it.", 'green', speed=18)
+
+def welcome_to_blacksmith_dialog():
+    dialog('Blacksmith', "Welcome stranger! You want stronger weapons? I have it.", 'green', speed=22)
+
+def item_not_scrappable_dialog():
+    dialog('Blacksmith', "I can't scrap that item! it's worthless.", 'green', speed=22)
+
+def item_not_upgradble_dialog():
+    dialog('Blacksmith', "I can't upgrade that item! it's not an attack item.", 'green', speed=22)
+
+def cant_upgrade_maxitem_dialog():
+    dialog('Blacksmith', "I can't upgrade that item anymore! it's at max level.", 'green', speed=22)
+
+def dont_waste_my_time_dialog():
+    dialog('Blacksmith', "Don't waste my time. either upgrade or get out!", 'green', speed=22)
 
 def cant_use_item_dialog():
     dialog('You', "I can't use that item!", 'yellow', speed=17)
@@ -169,7 +187,7 @@ def death_dialog():
 def default_kill_dialog(enemy_name):
     dialog('You', "It's over, time to move on...", 'yellow', speed=17)
 
-def cant_attack_with_item_dialog(item_name):
+def cant_attack_with_item_dialog():
     dialog('You', "I can't attack with that item!", 'yellow', speed=23)
 
 def miss_dialog():
@@ -196,3 +214,15 @@ def outro_dialog():
     dialog('Unknown', "A thought that shapes in your head has found meaning. No one knows where is SinkuLand and what are the creatures that live there, but each time you go inside, we learn a bit more! We'll be waiting for you on the other side. ", 'red', speed=15)
     dialog('You', "*you turn off the computer*", 'yellow', speed=15)
     print('\nThe End\n')
+
+def prompt(prom):
+    print(f'{prom}(y,n)')
+    YES = ['yes', 'y']
+    NO = ['no', 'n']
+    while(True):
+        input_str = input("> ").strip().lower()
+        if (input_str in YES):
+            return 1
+        if (input_str in NO):
+            return 0
+        print('answer with y or n')
