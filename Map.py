@@ -8,7 +8,8 @@ MAP_SIZE = 20
 DEFAULT_VALUES = [(DigableBlock, MAP_SIZE//3, (0,0)),
                     (HomeBlock, MAP_SIZE//6, (MAP_SIZE//5, MAP_SIZE//5)),
                     (CastleBlock, 1, (MAP_SIZE//2.5, MAP_SIZE//2.5)),
-                    (ShopBlock, MAP_SIZE//7, (MAP_SIZE//4,MAP_SIZE//4))]
+                    (ShopBlock, MAP_SIZE//7, (MAP_SIZE//4,MAP_SIZE//4)),
+                    (BlacksmithBlock, MAP_SIZE//7, (MAP_SIZE//7,MAP_SIZE//4))]
 class Map:
     def __init__(self, path_to_save=None):
         self.map = []
