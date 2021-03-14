@@ -36,6 +36,20 @@ class CoinItem(Item):
     def info(self):
         return 'amount: ' + str(self.amount)
 
+class ScrapItem(Item):
+    def __init__(self):
+        self.MAX = 0
+        self.MIN = 0
+        self.name = 'scrap'
+        self.tags = ['scrap']
+        self.amount = int((self.MAX - self.MIN + 1) * random()) + self.MIN
+    
+    def __str__(self):
+        return colored(self.name, "grey")
+
+    def info(self):
+        return 'amount: ' + str(self.amount)
+
 class UtilityItem(Item):
     def __init__(self):
         self.INITIAL_USES = 0
@@ -69,14 +83,15 @@ class HpItem(Item):
     
     def info(self):
         return 'restores: ' + str(self.hp) + 'hp'
-
+#TODO: add level to name and change scrap and sell price based on level!
 class AttackItem(Item):
     def __init__(self):
         self.tags = ['attack']
         self.name = "sword"
         self.speed = 0
+        self.rarity = 0
         self.type = 'unknown'
-        self.lvl = 1
+        self.lvl = 0
         self.damage = 0
 
     def __str__(self):
@@ -88,6 +103,19 @@ class AttackItem(Item):
     def upgrade(self):
         self.lvl += 1
         self.damage += 1
+    
+    def get_upgrade_price(self):
+        price_multiplier = 1 + (self.lvl * 0.66)
+        price_multiplier *= 0.25
+        return int(self.rarity * price_multiplier)
+
+    def get_scrap_parts(self):
+        MAX = 1
+        MIN = 0.8
+        price_multiplier = int((MAX - MIN) * random()) + MIN
+        price_multiplier *= 1 + (self.lvl / 3)
+        price_multiplier *= 0.25
+        return int(self.rarity * price_multiplier) 
 
 class MeleeAttackItem(AttackItem):
     def __init__(self):
@@ -95,15 +123,37 @@ class MeleeAttackItem(AttackItem):
         self.name = "sword"
         self.speed = 0
         self.type = 'melee'
-        self.lvl = 1
+        self.lvl = 0
         self.damage = 0
+        self.rarity = 0
+        self.init()
+    
+    def init(self):
+        x = 1
+        return x
     
     def info(self):
-        return 'damage: ' + str(self.damage) + ', speed: ' + str(self.speed) + ', type: ' + self.type
-    #TODO: complete this damage, speed, damage
+        return 'level: ' + str(self.lvl) + ', damage: ' + str(self.damage) + ', speed: ' + str(self.speed) + ', type: ' + self.type
+
     def upgrade(self):
-        if (self.lvl > 4):
-            print('complete this!')
+        if (self.lvl > 3):
+            return 0
+        self.lvl += 1
+        if (self.lvl == 1):
+            #damage upgrade = 20%
+            up = self.damage * 0.2
+            self.damage += int(up) + 1
+            return 'Upgraded the blade, It now deals +20% damage'
+        if (self.lvl == 2):
+            #speed upgrade = 15%
+            up = self.speed * 0.15
+            self.speed += int(up) + 1
+            return 'Upgraded the grip, It now has +15% speed'
+        if (self.lvl == 3):
+            #damage upgrade = 30%
+            up = self.damage * 0.3
+            self.damage += int(up) + 1
+            return 'Upgraded the blade even more, It now deals +30% damage'
         
 
 class RangedAttackItem(AttackItem):
@@ -113,14 +163,36 @@ class RangedAttackItem(AttackItem):
         self.name = "pistol"
         self.speed = 0
         self.type = 'ranged'
-        self.lvl = 1
+        self.lvl = 0
+        self.rarity = 0
         self.damage = 0
+        self.init()
+    
+    def init(self):
+        x = 1
+        return x
     
     def info(self):
-        return 'damage: ' + str(self.damage) + ', speed: ' + str(self.speed) + ', type: ' + self.type + ', misschance: ' + str(int(self.MISS_CHANCE*100)) + '%'
+        return 'level: ' + str(self.lvl) + ', damage: ' + str(self.damage) + ', speed: ' + str(self.speed) + ', type: ' + self.type + ', misschance: ' + str(int(self.MISS_CHANCE*100)) + '%'
     
-    #TODO: complete this damage, speed, misschance
-    # def upgrade(self):
+    def upgrade(self):
+        if (self.lvl >= 3):
+            return 0
+        self.lvl += 1
+        if (self.lvl == 1):
+            #damage upgrade = 15%
+            up = self.damage * 0.2
+            self.damage += int(up) + 1
+            return 'Upgraded the bullet material, It now deals +15% damage'
+        if (self.lvl == 2):
+            #speed upgrade = 20%
+            up = self.speed * 0.2
+            self.speed += int(up) + 1
+            return 'Upgraded the trigger, It now has +20% speed'
+        if (self.lvl == 3):
+            #misschance = -50%
+            self.MISS_CHANCE /= 2
+            return 'Added a new and improved sight, It now deals -50% misschance'
 
 
 class Shovel(UtilityItem):
@@ -177,7 +249,7 @@ class Steroid(UtilityItem):
         print(f'max hp is now {colored(game.player.max_hp, "red")}')
 
 class Fist(MeleeAttackItem):
-    def __init__(self):
+    def init(self):
         self.tags = ['attack']
         self.rarity = 999
         self.type = 'melee'
@@ -186,7 +258,7 @@ class Fist(MeleeAttackItem):
         self.speed = 6
 
 class Knife(MeleeAttackItem):
-    def __init__(self):
+    def init(self):
         self.INITIAL_USES = 1
         self.rarity = 7
         self.tags = ["utility", 'attack', 'random', 'melee']
@@ -197,7 +269,7 @@ class Knife(MeleeAttackItem):
         self.speed = 9
 
 class Sword(MeleeAttackItem):
-    def __init__(self):
+    def init(self):
         self.tags = ['attack', 'random', 'melee']
         self.rarity = 14
         self.name = "sword"
@@ -206,7 +278,7 @@ class Sword(MeleeAttackItem):
         self.speed = 6
 
 class Axe(MeleeAttackItem):
-    def __init__(self):
+    def init(self):
         self.tags = ['attack', 'random', 'melee']
         self.rarity = 10
         self.name = "axe"
@@ -214,9 +286,8 @@ class Axe(MeleeAttackItem):
         self.damage = 10
         self.speed = 2
 
-#TODO: handle ranged miss chance
 class Peacemaker(RangedAttackItem):
-    def __init__(self):
+    def init(self):
         self.MISS_CHANCE = 0.2
         self.tags = ['attack', 'random', 'ranged']
         self.rarity = 10
@@ -266,7 +337,16 @@ class CoinBag(CoinItem):
         self.tags = ['coin', 'random']
         self.amount = int((self.MAX - self.MIN + 1) * random()) + self.MIN
 
-ALL_ITEMS = [Shovel, Compass, Knife, Sword, CoinStack, CoinBag, Apple, Meat, Celery, Steroid, Axe, Peacemaker, Map]
+class ScrapBox(ScrapItem):
+    def __init__(self):
+        self.MAX = 1
+        self.MIN = 3
+        self.rarity = 8
+        self.name = 'scrap_box'
+        self.tags = ['scrap', 'random']
+        self.amount = int((self.MAX - self.MIN + 1) * random()) + self.MIN
+
+ALL_ITEMS = [Shovel, Compass, Knife, Sword, CoinStack, CoinBag, Apple, Meat, Celery, Steroid, Axe, Peacemaker, Map, ScrapBox]
 ITEM_TENSOR = []
 
 #TODO: use luck factor and make item generation better
