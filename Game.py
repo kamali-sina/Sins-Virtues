@@ -8,6 +8,9 @@ from time import sleep
 from sys import exit
 from Player import Player
 from Map import Map
+from os import path
+import os
+import pickle
 
 class Game:
     def __init__(self,path_to_savefiles=None, newgame=True, devmode=False):
@@ -23,12 +26,41 @@ class Game:
         self.BLACKSMITH_COMMANDS_HANDLER = [self.inventory, self.info, self.commands, self.upgrade, self.scrap, self.exit_shop]
         self.my_time = float(0)
         self.enemy_time = float(0)
-        self.player = Player(path_to_savefiles)
-        self.map = Map(path_to_savefiles)
-        if (not devmode):
-            intro_cutscene()
+        if (newgame):
+            if (not path.exists(path_to_savefiles)):
+                os.makedirs(path_to_savefiles)
+            self.player = Player(path_to_savefiles)
+            self.map = Map(path_to_savefiles)
+            if (not devmode):
+                intro_cutscene()
+            else:
+                self.player._fill_inventory()
+            self.player.save()
+            self.map.save()
         else:
-            self.player._fill_inventory()
+            if (not self.check_save_exists(path_to_savefiles)):
+                error('No save file exists in the selected path! exitting...')
+                exit()
+            self.load_classes(path_to_savefiles)
+            print('load successful!')
+
+    def load_classes(self, path_to_savefiles):
+        file_name = path_to_savefiles + 'player.pkl'
+        open_file = open(file_name, "rb")
+        self.player = pickle.load(open_file)
+        open_file.close()
+        file_name = path_to_savefiles + 'map.pkl'
+        open_file = open(file_name, "rb")
+        self.map = pickle.load(open_file)
+        open_file.close()
+        
+
+    def check_save_exists(self, path_to_savefiles):
+        files = ['player', 'map']
+        for file in files:
+            if (not path.exists(path_to_savefiles + file + '.pkl')):
+                return False
+        return True
 
     def run(self):
         self.idiot_counter = 0
