@@ -2,6 +2,7 @@ from Block import *
 from termcolor import colored
 from random import random
 from sys import exit
+import pickle
 
 
 MAP_SIZE = 20
@@ -11,11 +12,18 @@ DEFAULT_VALUES = [(DigableBlock, MAP_SIZE//3, (0,0)),
                     (ShopBlock, MAP_SIZE//7, (MAP_SIZE//4,MAP_SIZE//4)),
                     (BlacksmithBlock, MAP_SIZE//7, (MAP_SIZE//7,MAP_SIZE//4))]
 class Map:
-    def __init__(self, path_to_save=None):
+    def __init__(self, path_to_save):
         self.map = []
+        self.save_path = path_to_save
         self.__init_map()
         self.__spawn_special_blocks()
         self.__complete_map()
+    
+    def save(self):
+        file_name = self.save_path + "map.pkl"
+        open_file = open(file_name, "wb")
+        pickle.dump(self, open_file)
+        open_file.close()
 
     def __init_map(self):
         for i in range(MAP_SIZE):
