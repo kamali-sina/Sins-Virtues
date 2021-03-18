@@ -3,6 +3,7 @@ from random import random
 from Item import get_random_item, HpItem, Fist, CoinItem, ScrapBox
 import ConsoleHandler
 from sys import exit
+import pickle
 
 STARTING_MAX_hp = 10
 STARTING_GOLD = 0
@@ -11,7 +12,7 @@ STARTING_LOCATION = [0,0]
 STARTING_EQIPPED_ITEM = Fist()
 #TODO: make a way to diffrenciate the items of the same name but different levels
 class Player:
-    def __init__(self, path_to_save=None):
+    def __init__(self, path_to_save):
         self.inventory = []
         self.max_hp = STARTING_MAX_hp
         self.hp = self.max_hp
@@ -20,8 +21,13 @@ class Player:
         self.scrap = STARTING_SCRAP
         self.equipped = STARTING_EQIPPED_ITEM
         self.status_effects = []
-        # if (path_to_save):
-        #     self.load_from_save(path_to_save)
+        self.save_path = path_to_save
+    
+    def save(self):
+        file_name = self.save_path + "player.pkl"
+        open_file = open(file_name, "wb")
+        pickle.dump(self, open_file)
+        open_file.close()
 
     def _fill_inventory(self, count=20):
         for i in range(30):
