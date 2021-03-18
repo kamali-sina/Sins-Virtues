@@ -7,10 +7,13 @@ import os
 import threading
 # import pyautogui
 from random import random
+DELIM = ''
 try: 
     import msvcrt
+    DELIM = '\\'
 except:
     import getch
+    DELIM = '/'
 from sys import exit
 
 data_ready = threading.Event()
@@ -90,6 +93,15 @@ def toturial_if_needed(string):
         cprint('*Always go into the castle prepared. The enemies in there will kill you easily if you are not well prepared.*','red')
         print('\n\n===============\nHappy Exploring, goodnight!')
         exit()
+
+def get_file_path(argv1):
+    splitted = argv1.split('/')
+    if (len(splitted) != 1):
+        return '/'.join(splitted[:-1]) + '/'
+    splitted = argv1.split('\\')
+    if (len(splitted) != 1):
+        return '\\'.join(splitted[:-1]) + '\\'
+    return './'
 
 def slow(text, speed=13):
     """function which displays characters one at a time"""
