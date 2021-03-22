@@ -2,7 +2,7 @@ from random import random
 from termcolor import colored
 from time import sleep
 import sys
-from ConsoleHandler import dialog
+from ConsoleHandler import dialog, notification
 from sys import exit
 from StatusEffect import PoisonEffect
 
@@ -23,7 +23,7 @@ class Enemy:
     
     def attack(self, player):
         player.hp -= self.damage
-        print(f'{self.name} attacks you for {colored(str(self.damage), "red")} damage!')
+        return f'{self.name} attacks you for {colored(str(self.damage), "red")} damage!'
     
     def __str__(self):
         return f"name: {self.name} - hp: {self.hp} - speed: {self.speed} - damage: {self.damage}"
@@ -81,10 +81,9 @@ class Rotter(Enemy):
         for ef in player.status_effects:
             if (isinstance(ef, PoisonEffect)):
                 ef.reset()
-                print(f'{self.name} attacks you for {colored(str(self.damage), "red")} poison damage! You are now {effect}ed!')
-                return
+                return f'{self.name} attacks you for {colored(str(self.damage), "red")} poison damage! You are now {effect}ed!'
         player.status_effects.append(effect)
-        print(f'{self.name} attacks you for {colored(str(self.damage), "red")} poison damage! You are now {effect}ed!')
+        return f'{self.name} attacks you for {colored(str(self.damage), "red")} poison damage! You are now {effect}ed!'
 
 class BloatedBoss(Boss):
     def __init__(self):
