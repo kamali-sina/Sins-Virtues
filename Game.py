@@ -41,14 +41,17 @@ class Game:
                 intro_cutscene()
             else:
                 self.player._fill_inventory()
-            self.player.save()
-            self.map.save()
+            self.save()
         else:
             if (not self.check_save_exists(path_to_savefiles)):
                 error('No save file exists in the selected path! exitting...')
                 exit()
             self.load_classes(path_to_savefiles)
             print('load successful!')
+
+    def save(self):
+        self.player.save()
+        self.map.save()
 
     def load_classes(self, path_to_savefiles):
         file_name = path_to_savefiles + 'player.pkl'
@@ -168,7 +171,7 @@ class Game:
             return
         self.player.move(moveset_handler[index])
         self.new_block_dialog()
-        self.update_world_timer(0.38)
+        self.update_world_timer(0.30)
         return
     
     def inventory(self, dupped_str):
