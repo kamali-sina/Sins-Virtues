@@ -1,4 +1,4 @@
-GAMEVERSION = '1.2.0'
+GAMEVERSION = '1.2.1'
 
 from termcolor import colored, cprint
 import sys
