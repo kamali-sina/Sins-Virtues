@@ -1,7 +1,16 @@
 # Sins-Virtues
+
+## How to run the game
+
+To Run the game download the latest release based on your OS and run the game by using a console or Powershell with:
+    
+    ./VnS <options> <args>
+
+You can find out more about the options by using '-h'. The game creates a savefile automatically in your game folder when you play and tried to load from there too. For other paths you can give it as in the *args* section.
+
 ## **welcome to Sins & Virtues Toturial**
 
-This game is completely text based. There are **no** maps(yet), **no** hints, **no** eagle vision, **no** nothing.
+This game is completely text based. There are **no** full maps, **no** hints, **no** eagle vision, **no** nothing.
 But that does not mean that you are completely blind! The protagonist constantly talks about his surroundings, everything he says is there for a reason, so don't skip all the dialogs!
 
 ## HOW TO PLAY THE GAME
@@ -12,15 +21,28 @@ Each of the commands that you can use do use some time, this becomes important s
 
 We suggest testing and exploring the commnads by yourself, but if you want more info on some commands you can view the Commands.md file.
 
+## Day-Night Cycle
+
+The game has an intergrated day-night cycle system. At day everything is normal, shops are open and people are friendly. But at nights everything is different. Enemies spawn everywhere, shops are closed and npcs will not talk to you. We do not recommend exploring at nights.
+
+**Note: The times are calculated based on your commands not by real time.**
+
 ## Shops
 
 There are some shops located in the game that you can use to sell your unwanted items and buy the things you want. The currencies in this game are **coins**.
 
 Not all shopkeepers are the same, some have higher prices, some buy your items at a higher price. explore and find the shopkeeper that suits you the best.
 
+## Blacksmiths
+
+There are blacksmiths in the game that can help you upgrade your weapons. The currency for upgrading your weapons are called *Scarps* with can be obtained by either scarpping an unwanted weapon or finding some in the world.
+
+Each weapon has it's own upgrade path based on it's type. So we recommend upgrading every type of weapon and seeing the results by your self.
+
 ## Homes
 
-Homes can be used to rest the night and restore your hp. They also usualy contains a good item inside.
+Homes are the safe heavens of this game. your progress gets saved here, your hp restores and you can skip the nights here. They also usually contain an item inside.
+
 But not all homes are empty. Enter with **caution**.
 
 ## Fights
