@@ -166,7 +166,9 @@ class HomeBlock(Block):
             print('resting...')
             sleep(2)
             game.player.refill_hp()
-            response += f'health {colored("fully", "green")} restored'
+            response += f'health {colored("fully", "green")} restored\n'
+            response += "it's morning now."
+            game.reset_world_timer()
             if (self.contains_item):
                 self.contains_item = False
                 game.player.add_item(self.item_inside)
