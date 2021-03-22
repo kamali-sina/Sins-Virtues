@@ -19,3 +19,9 @@
 *   *buy* $item name$: buys the item asked if possible. 
 *   *sell* $item name$: sells the item called.
 *   *exit*: exits the shop.
+
+## Blacksmith only commnads
+*   *scrap* $item name$: scraps the item called on if it is a weapon.
+*   *upgrade* $item name$: upgrades the item asked if possible. 
+*   *exit*: exits the blacksmith.
+'upgrade', 'scrap'
