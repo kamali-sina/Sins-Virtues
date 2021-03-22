@@ -13,7 +13,7 @@ from Map import Map
 from os import path
 import os
 import pickle
-
+#TODO: If new game, check for save, if exists, give prompt to make sure!
 class Game:
     def __init__(self,path_to_savefiles=None, newgame=True, devmode=False):
         self.NORMAL_COMMANDS = ['move', 'inventory', 'use', 'info', 'commands', 'devmap', 'equip']
