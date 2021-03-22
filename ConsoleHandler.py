@@ -43,6 +43,11 @@ def dialog(name ,text, color, speed=13):
     slow(text, speed=speed)
     print()
 
+def notification(text, speed=13):
+    text = text.strip()
+    slow(text, speed=speed)
+    print()
+
 def help_if_needed(string):
     if (string in HELPS):
         print('Usage: Python3 VnS.py <options>\n')
@@ -107,9 +112,25 @@ def slow(text, speed=13):
     """function which displays characters one at a time"""
     poller = KeyboardPoller()
     poller.start()
+    second = False
+    charge = 0
     for i in range(len(text)):
+        if (charge > 0):
+            print(text[i], end="")
+            charge -= 1
+            continue
         if (text[i] == '\n'): 
             print()
+        elif(ord(text[i]) == 27):
+            if (second):
+                charge = 4
+                second = False
+            else:
+                charge = 5
+                second = True
+            print(text[i], end="")
+            charge -= 1
+            continue
         else: 
             print(text[i], end="")
         if (data_ready.isSet()):
@@ -180,6 +201,19 @@ def dont_waste_my_time_dialog():
 
 def cant_use_item_dialog():
     dialog('You', "I can't use that item!", 'yellow', speed=17)
+
+def new_time_dialog(time):
+    dia = ''
+    if (time == 0): dia = "The sun is rising! I was up all night god damn. Can't stop now..."
+    elif (time == 1): dia = "It's noon, getting dark soon, better find shelter fast."
+    else: dia = "It's night. Shops are closed. the night is dark and full of terrors..."
+    dialog('You', dia, 'yellow', speed=18)
+
+def encountered_enemy_at_night_dialog(enemy_name):
+    dialog('You', f"Shit there is a {enemy_name} here, Shit!", 'yellow', speed=18)
+
+def shop_is_closed_dialog(block):
+    dialog('You', f"The {block} is closed at nights, better find another shelter.", 'yellow', speed=18)
 
 def cant_dig_here_dialog():
     dialog('You', "This is not a digable block!", 'yellow', speed=17)
