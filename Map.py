@@ -5,7 +5,7 @@ from sys import exit
 import pickle
 
 
-MAP_SIZE = 20
+MAP_SIZE = 21
 DEFAULT_VALUES = [(DigableBlock, MAP_SIZE//3, (0,0)),
                     (HomeBlock, MAP_SIZE//6, (MAP_SIZE//5, MAP_SIZE//5)),
                     (CastleBlock, 1, (MAP_SIZE//2.5, MAP_SIZE//2.5)),
