@@ -102,9 +102,14 @@ class Player:
         self.max_hp += STEROID_ADD
         self.hp = self.max_hp
     
+    def unequip_discarded_item(self, index):
+        if (self.equipped is self.inventory[index]):
+            self.equipped = STARTING_EQIPPED_ITEM
+
     def sell(self, index):
         price = self.inventory[index].get_sell_price()
         self.coin += price
+        self.unequip_discarded_item(index)
         self.inventory.pop(index)
         return price
     
