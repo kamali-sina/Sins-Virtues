@@ -121,7 +121,8 @@ class Player:
                 damage =  0
         if (damage > 0):
             enemy.get_damaged(damage)
-            print(f'attacked {colored(enemy.name, "magenta")} for {colored(self.equipped.damage,"red")} damage!')
+            text = f'attacked {colored(enemy.name, "magenta")} for {colored(self.equipped.damage,"red")} damage!'
+            ConsoleHandler.notification(text, speed=30)
         else:
             ConsoleHandler.miss_dialog()
     
@@ -138,4 +139,4 @@ class Player:
     
     def print_affected_effects(self):
         for effect in self.status_effects:
-            print(effect.description())
+            ConsoleHandler.notification(effect.description(), speed=20)
