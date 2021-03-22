@@ -104,6 +104,12 @@ class AttackItem(Item):
         self.lvl += 1
         self.damage += 1
     
+    def get_sell_price(self):
+        MAX = 0.80 + self.lvl * 0.3
+        MIN = 0.60 + self.lvl * 0.3
+        price_multiplier = int((MAX - MIN) * random()) + MIN
+        return int(self.rarity * price_multiplier)
+    
     def get_upgrade_price(self):
         price_multiplier = 1 + (self.lvl * 0.66)
         price_multiplier *= 0.25
