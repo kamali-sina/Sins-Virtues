@@ -1,4 +1,4 @@
-GAMEVERSION = '1.1.0'
+GAMEVERSION = '1.2.0'
 
 from termcolor import colored, cprint
 import sys
@@ -30,7 +30,7 @@ class KeyboardPoller( threading.Thread ) :
 HELPS = ['-h', '--help']
 INFOS = ['-i', '--info']
 NEWGAME = '-n'
-LOADGAME = '-s'
+LOADGAME = '-l'
 DEVMODE = '--dev'
 TOTURIALS = ['-t', '--toturial']
 
@@ -59,8 +59,7 @@ def help_if_needed(string):
         helps = colored(f'"{HELPS[0]}"','yellow')
         infos = colored(f'"{INFOS[0]}"','yellow')
         print(f'  {new}: for starting a new game. \n    can be followed by the path to save the game. saves in the current directory as default\n')
-        # print(f'  {load}: for resuming from a save file.\n    must be followed by the path to the save directory')
-        print(f'  {load}: does not do anything currently.\n')
+        print(f'  {load}: for resuming from a save file.\n    can be be followed by the path to the save directory')
         print(f'  {toturial}: for learning the game. \n')
         print(f'  {infos}: for getting version info of the game \n')
         print(f'  {helps}: for seeing the page you are reading now. \n')
