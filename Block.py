@@ -133,7 +133,7 @@ class HomeBlock(Block):
     def __init__(self):
         self.ENEMY_CHANCE = 0.6
         self.tags = ['random', 'special']
-        self.rarity = 80
+        self.rarity = 112
         self.name = "home"
         self.color = 'green'
         self.has_adjacent_dialog = True
