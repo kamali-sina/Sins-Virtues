@@ -22,7 +22,7 @@ class Enemy:
         return f"Found {colored(self.bounty,'yellow')} coin(s) on the {self.name}"
     
     def attack(self, player):
-        player.hp -= self.damage
+        player.get_damaged(self.damage)
         return f'{self.name} attacks you for {colored(str(self.damage), "red")} damage!'
     
     def __str__(self):
@@ -76,7 +76,7 @@ class Rotter(Enemy):
         self.speed = 4
 
     def attack(self, player):
-        player.hp -= self.damage
+        player.get_damaged(self.damage)
         effect = PoisonEffect()
         for ef in player.status_effects:
             if (isinstance(ef, PoisonEffect)):
