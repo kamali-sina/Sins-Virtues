@@ -67,15 +67,19 @@ class Player:
                 return i
         return -1
     
-    def heal(self, index):
+    def heal_item(self, index):
+        """heals with the given item"""
         assert isinstance(self.inventory[index], HpItem), 'trying to heal with not hp item'
         item = self.inventory.pop(index)
-        self.hp = min(10, self.hp + item.hp)
+        self.heal(item.hp)
         if (self.hp == self.max_hp):
             print(colored("hp",'green') + ' is now full at ' + str(self.hp))
         else:
             print(colored("hp",'green') + ' is now ' + str(self.hp))
     
+    def heal(self, amount):
+        self.hp = min(10, self.hp + amount)
+
     def use_utility(self, index):
         item = self.inventory[index]
         item.uses -= 1
@@ -130,6 +134,12 @@ class Player:
             ConsoleHandler.notification(text, speed=30)
         else:
             ConsoleHandler.miss_dialog()
+    
+    def get_damaged(self, damage):
+        self.hp -= damage
+        if (self.hp <= 0):
+            ConsoleHandler.death_dialog()
+            exit()
     
     def update_status_effects(self):
         for i in range(len(self.status_effects) - 1, -1, -1):
