@@ -37,6 +37,9 @@ TOTURIALS = ['-t', '--toturial']
 def error(string):
     cprint(f"ERROR: {string}",'red')
 
+def warning(string):
+    cprint(f"WARNING: {string}",'yellow')
+
 def dialog(name ,text, color, speed=13):
     cprint(f'{name}: ',color,end="")
     text = text.strip()
@@ -204,7 +207,7 @@ def cant_use_item_dialog():
 def new_time_dialog(time):
     dia = ''
     if (time == 0): dia = "The sun is rising! I was up all night god damn. Can't stop now..."
-    elif (time == 1): dia = "It's noon, getting dark soon, better find shelter fast."
+    elif (time == 1): dia = "It's evening, getting dark soon, better find shelter fast."
     else: dia = "It's night. Shops are closed. the night is dark and full of terrors..."
     dialog('You', dia, 'yellow', speed=18)
 
@@ -216,6 +219,9 @@ def shop_is_closed_dialog(block):
 
 def cant_dig_here_dialog():
     dialog('You', "This is not a digable block!", 'yellow', speed=17)
+
+def stop_doing_that():
+    dialog('You', "dude ffs just stop doing that!", 'yellow', speed=17)
 
 def found_item_dialog(item_name):
     dialog('You', f"I found a {item_name}!", 'yellow', speed=17)
