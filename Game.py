@@ -13,7 +13,7 @@ from Map import Map
 from os import path
 import os
 import pickle
-#TODO: If new game, check for save, if exists, give prompt to make sure!
+
 class Game:
     def __init__(self,path_to_savefiles=None, newgame=True, devmode=False):
         self.NORMAL_COMMANDS = ['move', 'inventory', 'use', 'info', 'commands', 'devmap', 'equip']
@@ -27,27 +27,37 @@ class Game:
         self.BLACKSMITH_COMMANDS = ['inventory', 'info', 'commands', 'upgrade', 'scrap', 'exit']
         self.BLACKSMITH_COMMANDS_HANDLER = [self.inventory, self.info, self.commands, self.upgrade, self.scrap, self.exit_shop]
         self.world_timer = float(0)
-        self.available_times = ['morning', 'noon', 'night']
+        self.enter_counter = 0
+        self.available_times = ['morning', 'evening', 'night']
         self.NIGHT_ENEMY_CHANCE = 0.51
         self.time_of_day = self.available_times[0]
         self.my_time = float(0)
         self.enemy_time = float(0)
         if (newgame):
-            if (not path.exists(path_to_savefiles)):
-                os.makedirs(path_to_savefiles)
-            self.player = Player(path_to_savefiles)
-            self.map = Map(path_to_savefiles)
-            if (not devmode):
-                intro_cutscene()
-            else:
-                self.player._fill_inventory()
-            self.save()
+            self.new_game(path_to_savefiles, devmode)
         else:
             if (not self.check_save_exists(path_to_savefiles)):
                 error('No save file exists in the selected path! exitting...')
                 exit()
             self.load_classes(path_to_savefiles)
             print('load successful!')
+
+    def new_game(self, path_to_savefiles, devmode):
+        if (not path.exists(path_to_savefiles)):
+            os.makedirs(path_to_savefiles)
+        if (self.check_save_exists(path_to_savefiles) and not devmode):
+            ans = ConsoleHandler.prompt('A save file already exists in this location, overwrite?')
+            if (ans == 0):
+                print('exiting...')
+                exit()
+            print('overwriting...')
+        self.player = Player(path_to_savefiles)
+        self.map = Map(path_to_savefiles)
+        if (not devmode):
+            intro_cutscene()
+        else:
+            self.player._fill_inventory()
+        self.save()
 
     def save(self):
         self.player.save()
@@ -126,9 +136,9 @@ class Game:
         self.time_of_day = self.available_times[time]
     
     def process_input(self, input_str):
+        dupped_str = input_str.split()
         if (not self.validate_input(input_str)): return False
         print()
-        dupped_str = input_str.split()
         command = dupped_str[0]
         index = self.current_commandset.index(command)
         self.current_commandset_handler[index](dupped_str)
@@ -138,10 +148,13 @@ class Game:
     def validate_input(self, input_str):
         dupped_str = input_str.split()
         if (len(dupped_str) == 0):
-            self.unknown_command_dialog()
+            self.enter_counter += 1
+            if (self.enter_counter > 9):
+                ConsoleHandler.stop_doing_that()
             return False
         if (dupped_str[0] in self.current_commandset):
             self.idiot_counter = 0
+            self.enter_counter = 0
             return True
         self.unknown_command_dialog()
         return False
@@ -261,7 +274,7 @@ class Game:
         if('utility' in self.player.inventory[index].tags):
             self.player.inventory[index].use(self, index)
         elif ('hp' in self.player.inventory[index].tags):
-            self.player.heal(index)
+            self.player.heal_item(index)
         else:
             ConsoleHandler.cant_use_item_dialog()
             return
@@ -382,7 +395,7 @@ class Game:
         ConsoleHandler.new_block_reached_dialog(current_block)
         self.print_adjacent_dialogs()
         if (current_block.has_special_prompt):
-            slow(current_block.get_prompt() + '\n')
+            notification(current_block.get_prompt())
             self.state = 'prompt'
     
     def print_adjacent_dialogs(self):
@@ -416,10 +429,7 @@ class Game:
                 self.player.print_affected_effects()
                 input_str = input(colored("> ",'red')).strip().lower()
                 self.process_input(input_str)
-            if (self.player.hp <= 0):
-                ConsoleHandler.death_dialog()
-                exit()
-            elif(self.enemy.hp <= 0):
+            if(self.enemy.hp <= 0):
                 notification(f'the {colored(self.enemy.name, "red")} is dead.', speed=20)
                 print()
                 dialog("You", self.enemy.get_kill_dialog(), "yellow", speed=18)
