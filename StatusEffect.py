@@ -14,7 +14,10 @@ class StatusEffect():
         elif (self.hpc < 0): self.color = 'red'
 
     def apply(self, target):
-        target.hp += self.hpc
+        if (self.hpc >= 0):
+            target.heal(abs(self.hpc))
+        else:
+            target.get_damaged(abs(self.hpc))
         self.turns -= 1
         print(self.apply_dialog())
     
