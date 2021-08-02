@@ -6,17 +6,18 @@ from time import sleep
 from sys import exit
 import ConsoleHandler
 
+
 class Block:
     def __init__(self):
         self.name = ""
-        self.color = 'white'
+        self.color = "white"
         self.tags = []
         self.rarity = 1
         self.has_special_prompt = False
         self.has_adjacent_dialog = False
-    
+
     def get_info(self):
-        return 'default block'
+        return "default block"
 
     def __str__(self):
         return colored(self.name, self.color)
@@ -24,41 +25,44 @@ class Block:
     def get_oneworder(self):
         return colored(self.name[0], self.color)
 
+
 class CastleBlock(Block):
     def __init__(self):
         MAX_NUMBER_OF_ENEMIES = 4
         self.number_of_enemies = int(random() * MAX_NUMBER_OF_ENEMIES) + 1
         self.rarity = 9999
         self.name = "castle"
-        self.color = 'yellow'
+        self.color = "yellow"
         self.enemies = []
         self.boss = None
         self.has_special_prompt = True
         self.has_adjacent_dialog = False
-        self.tags = ['special']
+        self.tags = ["special"]
         self.init_enemies()
-    
+
     def init_enemies(self):
         for i in range(self.number_of_enemies):
             self.enemies.append(get_random_enemy())
         self.boss = get_endgame_boss()
-    
+
     def get_info(self):
-        return 'A castle in the middle of nowhere?!'
-    
+        return "A castle in the middle of nowhere?!"
+
     def get_prompt(self):
-        return 'There is no turning back now, get ready, have healing items, and equip your weapons. Do you want to enter the castle?(y,n)'
-    
+        return "There is no turning back now, get ready, have healing items, and equip your weapons. Do you want to enter the castle?(y,n)"
+
     def prompt_handler(self, ans, game):
-        if (ans == 0):
-            response = 'Oh thank god! This place looks scary af!'
+        if ans == 0:
+            response = "Oh thank god! This place looks scary af!"
         else:
-            ConsoleHandler.into_the_castle_dialog(self.number_of_enemies, self.boss.name)
+            ConsoleHandler.into_the_castle_dialog(
+                self.number_of_enemies, self.boss.name
+            )
             for enemy in self.enemies:
                 game.fight_enemy(enemy)
                 self.number_of_enemies -= 1
-                if (self.number_of_enemies > 0):
-                    print(f'{self.number_of_enemies} enemies remaining...')
+                if self.number_of_enemies > 0:
+                    print(f"{self.number_of_enemies} enemies remaining...")
             ConsoleHandler.boss_dialog()
             self.boss.intro_dialog()
             game.fight_enemy(self.boss)
@@ -67,112 +71,119 @@ class CastleBlock(Block):
             exit()
         return response
 
+
 class DigableBlock(Block):
     def __init__(self):
         self.ITEM_CHANCE = 0.9
-        self.tags = ['random', 'special', 'loot']
+        self.tags = ["random", "special", "loot"]
         self.name = "digable"
-        self.color = 'red'
+        self.color = "red"
         self.has_special_prompt = False
         self.has_adjacent_dialog = False
         self.rarity = 10
         self.contains_item = random() < self.ITEM_CHANCE
-        if (self.contains_item):
+        if self.contains_item:
             self.item_inside = get_random_item(luck_factor=0)
-    
+
     def get_info(self):
-        return 'It looks like I can dig here with a shovel!'
+        return "It looks like I can dig here with a shovel!"
+
 
 class NormalBlock(Block):
     def __init__(self, no_chest=False):
         self.ITEM_CHANCE = 0.04
-        self.tags = ['random', 'loot']
+        self.tags = ["random", "loot"]
         self.rarity = 1
         self.name = "normal"
-        self.color = 'white'
-        if (no_chest):
+        self.color = "white"
+        if no_chest:
             self.contains_item = False
         else:
             self.contains_item = random() < self.ITEM_CHANCE
         self.has_special_prompt = self.contains_item
         self.has_adjacent_dialog = self.contains_item
-        if (self.contains_item):
+        if self.contains_item:
             self.item_inside = get_random_item(luck_factor=0)
 
     def get_info(self):
-        if (self.contains_item):
-            return 'Wow there is a chest here!'
+        if self.contains_item:
+            return "Wow there is a chest here!"
         else:
-            return 'nothing special here.'
-    
+            return "nothing special here."
+
     def get_adjacent_dialog(self):
-        return 'I can see a chest over there on the ground!'
-    
+        return "I can see a chest over there on the ground!"
+
     def get_prompt(self):
-        return 'Open the chest?(y,n)'
-    
+        return "Open the chest?(y,n)"
+
     def prompt_handler(self, ans, game):
-        if (ans == 0):
+        if ans == 0:
             response = "Ok I'll play it safe"
         else:
             self.contains_item = False
             self.has_special_prompt = False
             self.has_adjacent_dialog = False
             game.player.add_item(self.item_inside)
-            response = f'Found a {self.item_inside.name} in the chest!'
+            response = f"Found a {self.item_inside.name} in the chest!"
         return response
 
     def __str__(self):
         me = self.name
-        if (self.contains_item):
-            me += '*'
+        if self.contains_item:
+            me += "*"
         return me
 
 
 class HomeBlock(Block):
     def __init__(self):
         self.ENEMY_CHANCE = 0.6
-        self.tags = ['random', 'special']
+        self.tags = ["random", "special"]
         self.rarity = 112
         self.name = "home"
-        self.color = 'green'
+        self.color = "green"
         self.has_adjacent_dialog = True
         self.has_special_prompt = True
         self.contains_item = True
         self.contains_enemy = random() < self.ENEMY_CHANCE
-        if (self.contains_enemy):
+        if self.contains_enemy:
             self.enemy = get_random_enemy()
         self.item_inside = get_random_item(luck_factor=0)
 
     def get_info(self):
-        return 'This looks like a place to rest.'
-    
+        return "This looks like a place to rest."
+
     def get_adjacent_dialog(self):
-        return 'I can see a faint light emitting nearby...'
-    
+        return "I can see a faint light emitting nearby..."
+
     def get_prompt(self):
-        return 'Enter the home?(y,n)'
+        return "Enter the home?(y,n)"
 
     def prompt_handler(self, ans, game):
-        response = ''
-        if (ans == 0):
-            response = 'Good idea, there might be people in there'
+        response = ""
+        if ans == 0:
+            response = "Good idea, there might be people in there"
         else:
             if self.contains_enemy:
-                ConsoleHandler.dialog("You", f'there is a {colored(self.enemy.name,"red")} here, I have to fight it!', "yellow", speed=20)
+                ConsoleHandler.dialog(
+                    "You",
+                    f'there is a {colored(self.enemy.name,"red")} here, I have to fight it!',
+                    "yellow",
+                    speed=20,
+                )
                 game.fight_enemy(self.enemy)
                 self.contains_enemy = False
-                print('now I can rest here')
-            print('resting...')
+                print("now I can rest here")
+            print("resting...")
             sleep(2)
             game.player.refill_hp()
             response += f'health {colored("fully", "green")} restored\n'
             response += "it's morning now.\ngame saved."
             game.reset_world_timer()
-            if (self.contains_item):
+            if self.contains_item:
                 self.contains_item = False
                 game.player.add_item(self.item_inside)
-                response += f'\nfound a {self.item_inside.name} here'
+                response += f"\nfound a {self.item_inside.name} here"
             game.save()
         return response
 
@@ -182,23 +193,24 @@ class ShopBlock(Block):
         self.NAME = 0
         self.PRICE = 1
         self.MAKER = 2
-        self.tags = ['random', 'special']
+        self.tags = ["random", "special"]
         self.rarity = 100
         self.name = "shop"
-        self.color = 'yellow'
+        self.color = "yellow"
         self.has_special_prompt = True
         self.has_adjacent_dialog = True
         self.stock = self.make_stock()
-    
+
     def get_adjacent_dialog(self):
-        return 'I can see a shop nearby.'
-    
+        return "I can see a shop nearby."
+
     def make_stock(self):
-        ignored_tags = ['coin']
-        stock = [[],[],[]]
+        ignored_tags = ["coin"]
+        stock = [[], [], []]
         for item in ALL_ITEMS:
             temp = item()
-            if (self.check_tags(ignored_tags, temp)): continue
+            if self.check_tags(ignored_tags, temp):
+                continue
             name = temp.name
             stock[self.NAME].append(name)
             rarity_multiplier = self.get_random_multiplier()
@@ -210,17 +222,17 @@ class ShopBlock(Block):
     def check_tags(self, ignored_tags, item):
         result = False
         for x in ignored_tags:
-            if (x in item.tags):
+            if x in item.tags:
                 result = True
                 break
         return result
 
     def index_item(self, item_name):
         for i in range(len(self.stock[self.NAME])):
-            if (self.stock[self.NAME][i] == item_name):
+            if self.stock[self.NAME][i] == item_name:
                 return i
         return -1
-    
+
     def buy_item(self, index):
         self.stock[self.NAME].pop(index)
         self.stock[self.PRICE].pop(index)
@@ -229,45 +241,54 @@ class ShopBlock(Block):
     def get_random_multiplier(self):
         x = random() - 0.5
         return 1 + (x * 0.4)
-    
+
     def get_info(self):
-        return 'I can spend the coins I found here and sell my extra stuff.'
-    
+        return "I can spend the coins I found here and sell my extra stuff."
+
     def get_prompt(self):
-        return 'Enter the shop?(y,n)'
+        return "Enter the shop?(y,n)"
 
     def prompt_handler(self, ans, game):
-        response = ''
-        if (ans == 0):
+        response = ""
+        if ans == 0:
             response = "I'll come back when I have more money"
         else:
             game.enter_shop()
         return response
 
+
 class BlacksmithBlock(Block):
     def __init__(self):
-        self.tags = ['random', 'special']
+        self.tags = ["random", "special"]
         self.rarity = 120
         self.name = "blacksmith"
-        self.color = 'grey'
+        self.color = "grey"
         self.has_special_prompt = True
         self.has_adjacent_dialog = True
-    
+
     def get_adjacent_dialog(self):
-        return 'I can hear hitting on an anvil nearby.'
-    
+        return "I can hear hitting on an anvil nearby."
+
     def get_info(self):
-        return 'I can upgrade my weapons and dismantle the extra stuff I found here.'
-    
+        return "I can upgrade my weapons and dismantle the extra stuff I found here."
+
     def get_prompt(self):
-        return 'Enter the blacksmith?(y,n)'
+        return "Enter the blacksmith?(y,n)"
 
     def prompt_handler(self, ans, game):
-        response = ''
-        if (ans == 0):
+        response = ""
+        if ans == 0:
             response = "I'll come back when I have more weapon parts!"
         else:
             game.enter_blacksmith()
         return response
 
-ALL_BLOCKS = [CastleBlock, DigableBlock, NormalBlock, HomeBlock, ShopBlock, BlacksmithBlock]
+
+ALL_BLOCKS = [
+    CastleBlock,
+    DigableBlock,
+    NormalBlock,
+    HomeBlock,
+    ShopBlock,
+    BlacksmithBlock,
+]
