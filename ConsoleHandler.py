@@ -1,5 +1,6 @@
 GAMEVERSION = "1.2.1"
 
+from getpass import getpass
 from termcolor import colored, cprint
 import sys
 from time import sleep
@@ -20,15 +21,14 @@ except:
     DELIM = "/"
 from sys import exit
 
+#TODO: Fix output system
+
 data_ready = threading.Event()
 
 
 class KeyboardPoller(threading.Thread):
     def run(self):
-        try:
-            msvcrt.getch()
-        except:
-            getch.getch()
+        getpass("")
         data_ready.set()
         return
 
@@ -50,8 +50,7 @@ def warning(string):
 
 
 def dialog(name, text, color, speed=13):
-    cprint(f"{name}: ", color, end="")
-    text = text.strip()
+    text = colored(f"{name}: ", color) + text.strip()
     slow(text, speed=speed)
     print()
 
@@ -188,9 +187,10 @@ def slow(text, speed=13):
         else:
             print(text[i], end="")
         if data_ready.isSet():
+            sys.stdout.write("\033[F")
             data_ready.clear()
             poller.join()
-            print(text[i + 1 :], end="")
+            print(text, end="")
             sys.stdout.flush()
             return
         sys.stdout.flush()
@@ -199,9 +199,9 @@ def slow(text, speed=13):
     i = 0
     do_once = True
     while not data_ready.isSet():
-        if i > 70 and do_once:
+        if i > 60 and do_once:
             do_once = False
-            print("-press any key to continue-", end="")
+            print("-press return key to continue-", end="")
             sys.stdout.flush()
         i += 1
         sleep(0.05)
