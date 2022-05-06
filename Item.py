@@ -3,7 +3,7 @@ from termcolor import colored, cprint
 from sys import exit
 
 ALL_TAGS = ["utility", "attack", "hp", "random", "coin"]
-
+#TODO: change scraping system to the legacy mode
 
 class Item:
     def __init__(self):
@@ -90,7 +90,6 @@ class HpItem(Item):
         return "restores: " + str(self.hp) + "hp"
 
 
-# TODO: add level to name and change scrap and sell price based on level!
 class AttackItem(Item):
     def __init__(self):
         self.tags = ["attack"]

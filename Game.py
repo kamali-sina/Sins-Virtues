@@ -14,6 +14,8 @@ from os import path
 import os
 import pickle
 
+#TODO: Add seed system
+#TODO: Check saving system
 
 class Game:
     def __init__(self, path_to_savefiles=None, newgame=True, devmode=False):

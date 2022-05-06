@@ -10,7 +10,7 @@ STARTING_GOLD = 0
 STARTING_SCRAP = 0
 STARTING_LOCATION = [0, 0]
 STARTING_EQIPPED_ITEM = Fist()
-# TODO: make a way to diffrenciate the items of the same name but different levels
+
 class Player:
     def __init__(self, path_to_save):
         self.inventory = []
